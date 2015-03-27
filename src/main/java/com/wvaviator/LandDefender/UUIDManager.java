@@ -58,7 +58,7 @@ public class UUIDManager {
 			
 			stmt = c.createStatement();
 			ResultSet rs = stmt.executeQuery(query);
-			String username = rs.getString("name");
+			String username = rs.getString("name").toUpperCase();
 
 			return username;
 			
@@ -74,7 +74,7 @@ public class UUIDManager {
 		String uuidString = getStringUUIDFromPlayer(player);
 		String username = getUsernameFromStringUUID(uuidString);
 		
-		String nameToCheck = player.getName();
+		String nameToCheck = player.getName().toUpperCase();
 		
 		if (username.equalsIgnoreCase(nameToCheck)) {
 			return false;
@@ -88,7 +88,7 @@ public class UUIDManager {
 	public static void updateUsername(EntityPlayerMP player) throws SQLException {
 		
 		String uuid = getStringUUIDFromPlayer(player);
-		String username = player.getName();
+		String username = player.getName().toUpperCase();
 		String update = "UPDATE players SET name = '" + username + "' WHERE  uuid = '" + uuid + "'";
 		
 		Statement stmt = null;
@@ -137,7 +137,7 @@ public class UUIDManager {
 	public static void addUsername(EntityPlayerMP player) throws SQLException {
 		
 		String uuid = getStringUUIDFromPlayer(player);
-		String username = player.getName();
+		String username = player.getName().toUpperCase();
 		
 		String update = "INSERT INTO players VALUES ('" + uuid + "', '" + username + "')";
 		
@@ -160,7 +160,9 @@ public class UUIDManager {
 	
 	public static String getStringUUIDFromName(String username) throws SQLException {
 		
-		String query = "SELECT uuid FROM players WHERE name = '" + username + "'";
+		String name = username.toUpperCase();
+		
+		String query = "SELECT uuid, name FROM players WHERE name = '" + name + "'";
 		Statement stmt = null;
 		Connection c = Database.getConnection();
 		String uuid = null;
@@ -174,7 +176,7 @@ public class UUIDManager {
 				return null;
 			}
 			
-			rs.getString(uuid);
+			uuid = rs.getString("uuid");
 			return uuid;
 			
 		} finally {

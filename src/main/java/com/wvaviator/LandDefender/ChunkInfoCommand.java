@@ -74,7 +74,14 @@ public class ChunkInfoCommand implements ICommand {
 			}
 
 			name = ChunkData.whichPlayerOwnsChunkByName(chunkX, chunkZ);
-			Chat.toChat(sender,  Chat.ownedBy + EnumChatFormatting.GOLD + name);
+			Chat.toChat(player,  Chat.ownedBy + EnumChatFormatting.GOLD + name);
+			
+			if (PlayerData.getTotalSharedForChunk(chunkX, chunkZ) > 0) {
+			
+				Chat.toChat(player, Chat.sharedWith);
+				PlayerData.listSharedForChunk(player, chunkX, chunkZ);
+				
+			}
 			
 		} catch (SQLException e) {
 			e.printStackTrace();

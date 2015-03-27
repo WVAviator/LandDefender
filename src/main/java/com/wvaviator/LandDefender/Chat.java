@@ -20,6 +20,13 @@ public class Chat {
 	public static String tooManyChunks = EnumChatFormatting.AQUA + "You have reached your maximum claim amount!\n" + EnumChatFormatting.AQUA + "You are limited to a maximum of " + EnumChatFormatting.GOLD + LandDefender.allowedChunks + EnumChatFormatting.AQUA + " chunks.";
 	public static String ownerDisplay = EnumChatFormatting.AQUA + "# " + EnumChatFormatting.GOLD;
 	public static String unowned = EnumChatFormatting.AQUA + "# Unowned";
+	public static String sharedWith = EnumChatFormatting.AQUA + "Shared with: ";
+	public static String onlyOwner = EnumChatFormatting.AQUA + "Only the chunk owner can add shared players!";
+	public static String invalidArgs = EnumChatFormatting.AQUA + "Invalid arguments!";
+	public static String addedShared = EnumChatFormatting.AQUA + "Added shared player: " + EnumChatFormatting.GOLD;
+	public static String removeShared = EnumChatFormatting.AQUA + "Removed shared player: " + EnumChatFormatting.GOLD;
+	public static String removedAll = EnumChatFormatting.AQUA + "Removed all shared players!";
+	
 	
 	public static void toChat(EntityPlayerMP player, String message) {
 		

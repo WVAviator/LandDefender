@@ -66,6 +66,7 @@ public class ChunkManager {
 			if(ChunkData.whichPlayerOwnsChunk(chunkX, chunkZ).equals(uuid)) {
 			
 			ChunkData.removeChunk(player, chunkX, chunkZ);
+			ChunkData.removeAllShared(chunkX, chunkZ);
 			Chat.toChat(player, EnumChatFormatting.AQUA + "You unclaimed the chunk at " + EnumChatFormatting.GOLD + chunkX + EnumChatFormatting.AQUA + ", " + EnumChatFormatting.GOLD + chunkZ);
 			return;
 			}
@@ -85,10 +86,12 @@ public class ChunkManager {
 		if (ChunkData.doesPlayerOwnChunk(player, chunkX, chunkZ) == true) {
 			
 			ChunkData.addShared(player, trustee, chunkX, chunkZ);
+
 			
 		} else {
 			
 			Chat.toChat(player, Chat.doNotOwn);
+			Chat.toChat(player, Chat.onlyOwner);
 			
 		}
 		
@@ -113,6 +116,24 @@ public class ChunkManager {
 			Chat.toChat(player, Chat.doNotOwn);
 			
 		}
+		
+	}
+
+	public static void removeAllShared(EntityPlayerMP player) throws SQLException {
+		
+		Chunk chunk = player.getEntityWorld().getChunkFromBlockCoords(player.getPosition());
+		int chunkX = chunk.xPosition;
+		int chunkZ = chunk.zPosition;
+		
+		boolean doesOwn = ChunkData.doesPlayerOwnChunk(player, chunkX, chunkZ);
+		
+		if (doesOwn == false) {
+			Chat.toChat(player, Chat.doNotOwn);
+			Chat.toChat(player, Chat.onlyOwner);
+			return;
+		}
+		
+		ChunkData.removeAllShared(chunkX, chunkZ);
 		
 	}
 	

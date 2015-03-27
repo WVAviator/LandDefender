@@ -78,8 +78,8 @@ public class LandDefender {
 		
 		e.registerServerCommand(new ClaimCommand());
 		e.registerServerCommand(new UnclaimCommand());
-		//e.registerServerCommand(new ShareCommand());
-		//e.registerServerCommand(new UnshareCommand());
+		e.registerServerCommand(new ShareCommand());
+		e.registerServerCommand(new UnshareCommand());
 		e.registerServerCommand(new ChunkInfoCommand());
 		e.registerServerCommand(new ListChunksCommand());
 		

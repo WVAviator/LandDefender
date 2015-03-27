@@ -121,7 +121,7 @@ public class PlayerData {
 		
 	}
 	
-public static void listAllShared(EntityPlayerMP player, EntityPlayerMP querier) throws SQLException {
+	public static void listAllShared(EntityPlayerMP player, EntityPlayerMP querier) throws SQLException {
 		
 		String uuid = player.getUniqueID().toString();
 		
@@ -162,6 +162,72 @@ public static void listAllShared(EntityPlayerMP player, EntityPlayerMP querier) 
 		}	
 		
 	}
+
+	public static void listSharedForChunk(EntityPlayerMP player, int chunkX, int chunkZ) throws SQLException {
+		
+		String query = "SELECT id, name FROM chunkdata WHERE chunkx = " + chunkX + " AND chunkz = " + chunkZ + " AND isowner = 'FALSE'";
+		
+		Connection c = Database.getConnection();
+		Statement stmt = null;
+		
+		try {
+			
+			stmt = c.createStatement();
+			ResultSet rs = stmt.executeQuery(query);
+			
+			if (!rs.next()) {
+				return;
+			}
+			
+			do {
+				
+				String name = rs.getString("name");
+				Chat.toChat(player, EnumChatFormatting.GOLD + name);
+				
+			} while (rs.next());
+			
+		} finally {
+			
+			stmt.close();
+			c.close();
+			
+		}
+		
+	}
 	
+public static int getTotalSharedForChunk(int chunkX, int chunkZ) throws SQLException {
+		
+		String query = "SELECT id FROM chunkdata WHERE chunkx = " + chunkX + " AND chunkz = " + chunkZ + " AND isowner = 'FALSE'";
+		
+		Connection c = Database.getConnection();
+		Statement stmt = null;
+		
+		try {
+			
+			stmt = c.createStatement();
+			ResultSet rs = stmt.executeQuery(query);
+			
+			if (!rs.next()) {
+				return 0;
+			}
+			
+			int count = 0;
+			
+			do {
+				
+				count++;
+				
+			} while (rs.next());
+			
+			return count;
+			
+		} finally {
+			
+			stmt.close();
+			c.close();
+			
+		}
+		
+	}
 
 }

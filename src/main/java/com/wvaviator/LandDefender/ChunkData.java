@@ -198,7 +198,7 @@ public class ChunkData {
 		
 		//int nextId = Database.getSize() + 1;
 		
-		String update = "INSERT INTO chunkdata (uuid, chunkx, chunkz, isowner, name) VALUES ('" + uuid + "', " + chunkX + ", " + chunkZ + ", 'FALSE', '" + player.getName() + "')";
+		String update = "INSERT INTO chunkdata (uuid, chunkx, chunkz, isowner, name) VALUES ('" + uuid + "', " + chunkX + ", " + chunkZ + ", 'FALSE', '" + trustee + "')";
 		Connection c = Database.getConnection();
 		Statement stmt = null;
 		
@@ -206,6 +206,7 @@ public class ChunkData {
 		
 		stmt = c.createStatement();
 		stmt.executeUpdate(update);
+		Chat.toChat(player, Chat.addedShared + trustee);
 		
 		} finally {
 		
@@ -234,6 +235,7 @@ public class ChunkData {
 		
 		stmt = c.createStatement();
 		stmt.executeUpdate(update);
+		Chat.toChat(player, Chat.removeShared + trustee);
 		
 		} finally {
 		
@@ -241,6 +243,27 @@ public class ChunkData {
 		c.close();
 		
 		}
+	}
+	
+	public static void removeAllShared(int chunkX, int chunkZ) throws SQLException {
+		
+		String update = "DELETE FROM chunkdata WHERE chunkx = " + chunkX + " AND chunkz = " + chunkZ + " AND isowner = 'FALSE'";
+		
+		Connection c = Database.getConnection();
+		Statement stmt = null;
+		
+		try {
+			
+			stmt = c.createStatement();
+			stmt.executeUpdate(update);
+			
+		} finally {
+			
+			stmt.close();
+			c.close();
+			
+		}
+		
 	}
 
 }
