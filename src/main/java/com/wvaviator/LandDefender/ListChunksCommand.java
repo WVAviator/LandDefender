@@ -10,14 +10,15 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.BlockPos;
 
-public class ClaimCommand implements ICommand {
-	
-	private List aliases;
-	public ClaimCommand() {
-		this.aliases = new ArrayList();
-		this.aliases.add("claim");
-	}
+public class ListChunksCommand implements ICommand {
 
+	private List aliases;
+	public ListChunksCommand() {
+		this.aliases = new ArrayList();
+		this.aliases.add("listchunks");
+		this.aliases.add("listclaims");
+	}
+	
 	@Override
 	public int compareTo(Object o) {
 		// TODO Auto-generated method stub
@@ -27,13 +28,13 @@ public class ClaimCommand implements ICommand {
 	@Override
 	public String getName() {
 		// TODO Auto-generated method stub
-		return "claim";
+		return "listchunks";
 	}
 
 	@Override
 	public String getCommandUsage(ICommandSender sender) {
 		// TODO Auto-generated method stub
-		return "/claim";
+		return "/listchunks";
 	}
 
 	@Override
@@ -45,30 +46,17 @@ public class ClaimCommand implements ICommand {
 	@Override
 	public void execute(ICommandSender sender, String[] args)
 			throws CommandException {
-		
-		if (!(sender instanceof EntityPlayerMP)) {
+
+		if(!(sender instanceof EntityPlayerMP)) {
 			Chat.toChat(sender, Chat.noConsole);
 			return;
 		}
 		
-		
 		EntityPlayerMP player = (EntityPlayerMP) sender;
 		
 		try {
-			if (PlayerData.getPlayerTotalOwned(player) >= LandDefender.allowedChunks) {
-				
-				Chat.toChat(player, Chat.tooManyChunks);
-				return;
-				
-			}
-		} catch (SQLException e1) {
-			e1.printStackTrace();
-			return;
-		}
-
-		try {
 			
-			ChunkManager.claimChunk(player);
+			PlayerData.listAllOwned(player, player);
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -79,17 +67,20 @@ public class ClaimCommand implements ICommand {
 
 	@Override
 	public boolean canCommandSenderUse(ICommandSender sender) {
+		// TODO Auto-generated method stub
 		return true;
 	}
 
 	@Override
 	public List addTabCompletionOptions(ICommandSender sender, String[] args,
 			BlockPos pos) {
+		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public boolean isUsernameIndex(String[] args, int index) {
+		// TODO Auto-generated method stub
 		return false;
 	}
 

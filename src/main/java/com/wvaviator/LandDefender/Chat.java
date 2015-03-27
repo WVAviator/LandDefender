@@ -15,7 +15,12 @@ public class Chat {
 	public static String ownedBy = EnumChatFormatting.AQUA + "This chunk is owned by: ";
 	public static String noBuild = EnumChatFormatting.AQUA + "You cannot do that here!";
 	public static String claimedLand = EnumChatFormatting.AQUA + "You have succesfully claimed this land!";
-
+	public static String followingChunks = EnumChatFormatting.AQUA + "The following chunks are owned by " + EnumChatFormatting.GOLD;
+	public static String followingSharedChunks = EnumChatFormatting.AQUA + "The following chunks are shared with " + EnumChatFormatting.GOLD;
+	public static String tooManyChunks = EnumChatFormatting.AQUA + "You have reached your maximum claim amount!\n" + EnumChatFormatting.AQUA + "You are limited to a maximum of " + EnumChatFormatting.GOLD + LandDefender.allowedChunks + EnumChatFormatting.AQUA + " chunks.";
+	public static String ownerDisplay = EnumChatFormatting.AQUA + "# " + EnumChatFormatting.GOLD;
+	public static String unowned = EnumChatFormatting.AQUA + "# Unowned";
+	
 	public static void toChat(EntityPlayerMP player, String message) {
 		
 		ChatComponentText text = new ChatComponentText(message);

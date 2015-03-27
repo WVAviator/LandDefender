@@ -48,7 +48,7 @@ public class ChunkData {
 		ResultSet rs = stmt.executeQuery(query);
 		
 		String uuid = rs.getString("uuid");
-		UUID playerUUID = Reference.getOnlineUUID(player.getName());
+		UUID playerUUID = player.getUniqueID();
 		
 		if (uuid.equals(playerUUID.toString())) {
 			return true;
@@ -84,7 +84,7 @@ public class ChunkData {
 		}
 		
 		String uuid = rs.getString("uuid");
-		UUID playerUUID = Reference.getOnlineUUID(player.getName());
+		UUID playerUUID = player.getUniqueID();
 		
 		
 		
@@ -111,9 +111,6 @@ public class ChunkData {
 		ResultSet rs = stmt.executeQuery(query);
 		
 		String uuid = rs.getString("uuid");
-		
-		stmt.close();
-		c.close();
 		
 		return uuid;
 	
@@ -149,8 +146,7 @@ public class ChunkData {
 	
 	public static void addChunk(EntityPlayerMP player, int chunkX, int chunkZ) throws SQLException {
 		
-		UUID uuidO = Reference.getOnlineUUID(player.getName());
-		String uuid = uuidO.toString();
+		String uuid = player.getUniqueID().toString();
 		//int nextId = Database.getSize() + 1;
 		
 		String update = "INSERT INTO chunkdata (uuid, chunkx, chunkz, isowner, name) VALUES ('" + uuid + "', " + chunkX + ", " + chunkZ + ", 'TRUE', '" + player.getName() + "')";
@@ -171,8 +167,7 @@ public class ChunkData {
 	
 	public static void removeChunk(EntityPlayerMP player, int chunkX, int chunkZ) throws SQLException {
 		
-		UUID uuidO = Reference.getOnlineUUID(player.getName());
-		String uuid = uuidO.toString();
+		String uuid = player.getUniqueID().toString();
 		
 		String update = "DELETE FROM chunkdata WHERE uuid = '" + uuid + "' AND chunkx = " + chunkX + " AND chunkz = " + chunkZ + " AND isowner = 'TRUE'";
 		Connection c = Database.getConnection();
@@ -194,14 +189,13 @@ public class ChunkData {
 	
 	public static void addShared(EntityPlayerMP player, String trustee, int chunkX, int chunkZ) throws SQLException {
 		
-		UUID uuidO = Reference.getOnlineUUID(trustee);
+		String uuid = UUIDManager.getStringUUIDFromName(trustee);
 		
-		if (uuidO == null) {
+		if (uuid == null) {
 			Chat.toChat(player, Chat.playerNotFound);
 			return;
 		}
 		
-		String uuid = uuidO.toString();
 		//int nextId = Database.getSize() + 1;
 		
 		String update = "INSERT INTO chunkdata (uuid, chunkx, chunkz, isowner, name) VALUES ('" + uuid + "', " + chunkX + ", " + chunkZ + ", 'FALSE', '" + player.getName() + "')";
@@ -224,14 +218,13 @@ public class ChunkData {
 	
 	public static void removeShared(EntityPlayerMP player, String trustee, int chunkX, int chunkZ) throws SQLException {
 		
-		UUID uuidO = Reference.getOnlineUUID(trustee);
+		String uuid = UUIDManager.getStringUUIDFromName(trustee);
 		
-		if (uuidO == null) {
+		if (uuid == null) {
 			Chat.toChat(player, Chat.playerNotFound);
 			return;
 		}
 		
-		String uuid = uuidO.toString();
 		
 		String update = "DELETE FROM chunkdata WHERE uuid = '" + uuid + "' AND chunkx = " + chunkX + " AND chunkz = " + chunkZ + " AND isowner = 'FALSE'";
 		Connection c = Database.getConnection();

@@ -90,9 +90,27 @@ public class Database {
 	public static void establishTables() throws SQLException {
 		
 		String newTable = "CREATE TABLE chunkdata (id INTEGER PRIMARY KEY AUTOINCREMENT, uuid VARCHAR(40), chunkx INT NOT NULL, chunkz INT NOT NULL, isowner BOOL NOT NULL DEFAULT 'FALSE', name VARCHAR(20))";
+		String newTable2 = "CREATE TABLE players (uuid VARCHAR(40), name VARCHAR(20), PRIMARY KEY (uuid))";
 		Statement stmt = null;
 		stmt = getConnection().createStatement();
+		
+		try {
 		stmt.executeUpdate(newTable);
+		} finally {
+			stmt.close();
+			c.close();
+		}
+		
+		stmt = getConnection().createStatement();
+		
+		try {
+			stmt.executeUpdate(newTable2);
+		} finally {
+			stmt.close();
+			c.close();
+		}
+		
+		
 		
 	}
 	

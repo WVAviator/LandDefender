@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import net.minecraft.command.ICommand;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.common.config.Property;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -21,12 +22,17 @@ public class LandDefender {
 	public static String dataDirectory = null;
 	public static boolean databaseExists = false;
 	public Configuration config;
+	public static int allowedChunks = 0;
 	
 	@EventHandler
 	public void onPreInitialization(FMLPreInitializationEvent e) {
 		
 		this.config = new Configuration(e.getSuggestedConfigurationFile());
 		this.config.load();
+		
+		Property totalAllowedClaims = this.config.get(Configuration.CATEGORY_GENERAL, "Maximum Allowed Claims Per Player", 6);
+		allowedChunks = totalAllowedClaims.getInt();
+		this.config.save();
 
 		directory = new File(e.getModConfigurationDirectory() + "/LandDefender/");
 		dataDirectory = directory.getPath() + "/";
@@ -61,10 +67,10 @@ public class LandDefender {
 			
 		}
 		
-		//MinecraftForge.EVENT_BUS.register(new ChunkEntryHandler());
-		//MinecraftForge.EVENT_BUS.register(new ChunkExitHandler());
+		MinecraftForge.EVENT_BUS.register(new ChunkEntryHandler());
 		MinecraftForge.EVENT_BUS.register(new BlockBreakHandler());
 		MinecraftForge.EVENT_BUS.register(new BlockBuildHandler());
+		MinecraftForge.EVENT_BUS.register(new PlayerJoinHandler());
 	}
 	
 	@EventHandler
@@ -75,6 +81,7 @@ public class LandDefender {
 		//e.registerServerCommand(new ShareCommand());
 		//e.registerServerCommand(new UnshareCommand());
 		e.registerServerCommand(new ChunkInfoCommand());
+		e.registerServerCommand(new ListChunksCommand());
 		
 	}
 	

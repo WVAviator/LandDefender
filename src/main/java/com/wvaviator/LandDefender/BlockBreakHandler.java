@@ -15,7 +15,7 @@ public class BlockBreakHandler {
 	@SubscribeEvent
 	public void breakBlock(BreakEvent e) throws SQLException {
 		
-		System.out.println("On break event succesfully called");
+		//System.out.println("On break event succesfully called");
 		EntityPlayerMP player = (EntityPlayerMP) e.getPlayer();
 		BlockPos pos = e.pos;
 		

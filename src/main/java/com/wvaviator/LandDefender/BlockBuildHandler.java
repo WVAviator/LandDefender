@@ -15,7 +15,7 @@ public class BlockBuildHandler {
 	@SubscribeEvent
 	public void onBuild(PlayerInteractEvent e) throws SQLException {
 		
-		System.out.println("On build event succesfully called");
+		//System.out.println("On build event succesfully called");
 		EntityPlayerMP player = (EntityPlayerMP) e.entityPlayer;
 		BlockPos pos = e.pos;
 		

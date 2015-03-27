@@ -61,8 +61,7 @@ public class ChunkManager {
 		
 		if (ChunkData.isChunkOwned(chunkX, chunkZ) == true) {
 
-			UUID uuidO = Reference.getOnlineUUID(player.getName());
-			String uuid = uuidO.toString();
+			String uuid = player.getUniqueID().toString();
 			
 			if(ChunkData.whichPlayerOwnsChunk(chunkX, chunkZ).equals(uuid)) {
 			
@@ -101,8 +100,9 @@ public class ChunkManager {
 		int chunkX = chunk.xPosition;
 		int chunkZ = chunk.zPosition;
 		
-		UUID uuidO = Reference.getOnlineUUID(player.getName());
-		String uuid = uuidO.toString();
+		String uuid = player.getUniqueID().toString();
+		
+		
 		
 		if (uuid.equals(ChunkData.whichPlayerOwnsChunk(chunkX, chunkZ))) {
 			
