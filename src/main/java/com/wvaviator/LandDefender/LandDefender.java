@@ -23,6 +23,8 @@ public class LandDefender {
 	public static boolean databaseExists = false;
 	public Configuration config;
 	public static int allowedChunks = 0;
+	public static int useProtectPerm = 4;
+	public static boolean canOverride = true;
 	
 	@EventHandler
 	public void onPreInitialization(FMLPreInitializationEvent e) {
@@ -32,6 +34,10 @@ public class LandDefender {
 		
 		Property totalAllowedClaims = this.config.get(Configuration.CATEGORY_GENERAL, "Maximum Allowed Claims Per Player", 6);
 		allowedChunks = totalAllowedClaims.getInt();
+		Property useProtect = this.config.get(Configuration.CATEGORY_GENERAL, "Required Permission Level to use Protect Command", 4);
+		useProtectPerm = useProtect.getInt();
+		Property override = this.config.get(Configuration.CATEGORY_GENERAL, "Using /unprotect Can Override and Remove any Claimed Chunk", true);
+		canOverride = override.getBoolean();
 		this.config.save();
 
 		directory = new File(e.getModConfigurationDirectory() + "/LandDefender/");
@@ -82,6 +88,8 @@ public class LandDefender {
 		e.registerServerCommand(new UnshareCommand());
 		e.registerServerCommand(new ChunkInfoCommand());
 		e.registerServerCommand(new ListChunksCommand());
+		e.registerServerCommand(new ProtectCommand());
+		e.registerServerCommand(new UnprotectCommand());
 		
 	}
 	

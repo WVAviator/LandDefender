@@ -137,4 +137,45 @@ public class ChunkManager {
 		
 	}
 	
+	public static void protectChunk(EntityPlayerMP player, String name) throws SQLException {
+		
+		Chunk chunk = player.getEntityWorld().getChunkFromBlockCoords(player.getPosition());
+		int chunkX = chunk.xPosition;
+		int chunkZ = chunk.zPosition;
+		
+		if (ChunkData.isChunkOwned(chunkX, chunkZ) == false) {		
+			ChunkData.protectChunk(player, name, chunkX, chunkZ);
+			
+			Chat.toChat(player, EnumChatFormatting.AQUA + "You claimed the chunk at " + EnumChatFormatting.GOLD + chunkX + EnumChatFormatting.AQUA + ", " + EnumChatFormatting.GOLD + chunkZ);
+			
+		} else {
+			
+			if (LandDefender.canOverride == true) {
+				Chat.toChat(player, Chat.useUnprotect);
+				return;
+			}
+			
+			Chat.toChat(player, Chat.noClaim);
+		}
+		
+	}
+	
+	public static void unprotectChunk(EntityPlayerMP player) throws SQLException {
+		
+		Chunk chunk = player.getEntityWorld().getChunkFromBlockCoords(player.getPosition());
+		int chunkX = chunk.xPosition;
+		int chunkZ = chunk.zPosition;
+		
+		if (ChunkData.isChunkOwned(chunkX, chunkZ) == false) {			
+			Chat.toChat(player, Chat.nobodyOwns);
+			return;
+		}
+		
+
+		Chat.toChat(player, Chat.unprotect + chunkX + EnumChatFormatting.AQUA + ", " + EnumChatFormatting.GOLD + chunkZ);
+		
+		ChunkData.unprotectChunk(chunkX, chunkZ);
+		
+	}
+	
 }

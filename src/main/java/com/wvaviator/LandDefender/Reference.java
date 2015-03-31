@@ -13,6 +13,6 @@ public class Reference {
 
 	public final static String MOD_ID = "landdefender";
 	public final static String MOD_NAME = "Land Defender";
-	public final static String VERSION = "0.1.0";
+	public final static String VERSION = "0.2.0";
 	
 }

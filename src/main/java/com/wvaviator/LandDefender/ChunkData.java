@@ -266,4 +266,47 @@ public class ChunkData {
 		
 	}
 
+	public static void protectChunk(EntityPlayerMP player, String name,
+			int chunkX, int chunkZ) throws SQLException {
+		
+		String uuid = "PROTECTION";
+		
+		
+		String update = "INSERT INTO chunkdata (uuid, chunkx, chunkz, isowner, name) VALUES ('" + uuid + "', " + chunkX + ", " + chunkZ + ", 'TRUE', '" + name + "')";
+		Connection c = Database.getConnection();
+		Statement stmt = null;
+		
+		try {
+		
+		stmt = c.createStatement();
+		stmt.executeUpdate(update);
+
+		} finally {
+		stmt.close();
+		c.close();
+		}
+		
+	}
+	
+	public static void unprotectChunk(int chunkX, int chunkZ) throws SQLException {
+		
+		String update = null;
+		if (LandDefender.canOverride == true) {
+			update = "DELETE FROM chunkdata WHERE chunkx = " + chunkX + " AND chunkz = " + chunkZ;
+		} else {
+			update = "DELETE FROM chunkdata WHERE uuid = 'PROTECTION' AND chunkx = " + chunkX + " AND chunkz = " + chunkZ;
+		}
+		
+		Connection c = Database.getConnection();
+		Statement stmt = null;
+		
+		try {
+			stmt = c.createStatement();
+			stmt.executeUpdate(update);
+		} finally {
+			stmt.close();
+			c.close();
+		}
+	}
+
 }

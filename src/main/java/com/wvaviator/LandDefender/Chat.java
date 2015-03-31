@@ -26,6 +26,9 @@ public class Chat {
 	public static String addedShared = EnumChatFormatting.AQUA + "Added shared player: " + EnumChatFormatting.GOLD;
 	public static String removeShared = EnumChatFormatting.AQUA + "Removed shared player: " + EnumChatFormatting.GOLD;
 	public static String removedAll = EnumChatFormatting.AQUA + "Removed all shared players!";
+	public static String useUnprotect = EnumChatFormatting.AQUA + "This chunk is already owned! Use /unprotect first!";
+	public static String max20 = EnumChatFormatting.AQUA + "You are limited to 20 characters for the name!";
+	public static String unprotect = EnumChatFormatting.AQUA + "Removed all protections from chunk " + EnumChatFormatting.GOLD;
 	
 	
 	public static void toChat(EntityPlayerMP player, String message) {
