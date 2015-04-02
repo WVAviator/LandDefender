@@ -12,8 +12,26 @@ import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
+import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
+import net.minecraftforge.fml.relauncher.Side;
 
 import com.google.common.eventbus.Subscribe;
+import com.wvaviator.LandDefender.Commands.ChunkInfoCommand;
+import com.wvaviator.LandDefender.Commands.ClaimCommand;
+import com.wvaviator.LandDefender.Commands.ListChunksCommand;
+import com.wvaviator.LandDefender.Commands.ProtectCommand;
+import com.wvaviator.LandDefender.Commands.ShareCommand;
+import com.wvaviator.LandDefender.Commands.UnclaimCommand;
+import com.wvaviator.LandDefender.Commands.UnprotectCommand;
+import com.wvaviator.LandDefender.Commands.UnshareCommand;
+import com.wvaviator.LandDefender.Data.Database;
+import com.wvaviator.LandDefender.Events.BlockBreakHandler;
+import com.wvaviator.LandDefender.Events.BlockBuildHandler;
+import com.wvaviator.LandDefender.Events.ChunkEntryHandler;
+import com.wvaviator.LandDefender.Events.FillBucketHandler;
+import com.wvaviator.LandDefender.Events.PlayerJoinHandler;
+import com.wvaviator.LandDefender.Reference.Reference;
 
 @Mod(modid = Reference.MOD_ID, name = Reference.MOD_NAME, version = Reference.VERSION, acceptableRemoteVersions="*")
 public class LandDefender {
@@ -25,6 +43,8 @@ public class LandDefender {
 	public static int allowedChunks = 0;
 	public static int useProtectPerm = 4;
 	public static boolean canOverride = true;
+	
+	
 	
 	@EventHandler
 	public void onPreInitialization(FMLPreInitializationEvent e) {
@@ -73,10 +93,17 @@ public class LandDefender {
 			
 		}
 		
+		try {
+			Database.databaseUpdate();
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+		}
+		
 		MinecraftForge.EVENT_BUS.register(new ChunkEntryHandler());
 		MinecraftForge.EVENT_BUS.register(new BlockBreakHandler());
 		MinecraftForge.EVENT_BUS.register(new BlockBuildHandler());
 		MinecraftForge.EVENT_BUS.register(new PlayerJoinHandler());
+		MinecraftForge.EVENT_BUS.register(new FillBucketHandler());
 	}
 	
 	@EventHandler
