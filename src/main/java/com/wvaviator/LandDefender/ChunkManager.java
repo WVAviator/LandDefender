@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import com.wvaviator.LandDefender.ChunkPermissions.BlockPerms;
 import com.wvaviator.LandDefender.ChunkPermissions.PermCheck;
+import com.wvaviator.LandDefender.ChunkPermissions.PermModify;
 import com.wvaviator.LandDefender.Data.ChunkData;
 import com.wvaviator.LandDefender.Reference.Chat;
 
@@ -77,6 +78,7 @@ public class ChunkManager {
 			
 			ChunkData.removeChunk(player, chunkX, chunkZ);
 			ChunkData.removeAllShared(chunkX, chunkZ);
+			PermModify.removePerms(chunkX, chunkZ);
 			Chat.toChat(player, EnumChatFormatting.AQUA + "You unclaimed the chunk at " + EnumChatFormatting.GOLD + chunkX + EnumChatFormatting.AQUA + ", " + EnumChatFormatting.GOLD + chunkZ);
 			return;
 			}
@@ -185,6 +187,7 @@ public class ChunkManager {
 		Chat.toChat(player, Chat.unprotect + chunkX + EnumChatFormatting.AQUA + ", " + EnumChatFormatting.GOLD + chunkZ);
 		
 		ChunkData.unprotectChunk(chunkX, chunkZ);
+		PermModify.removePerms(chunkX, chunkZ);
 		
 	}
 	

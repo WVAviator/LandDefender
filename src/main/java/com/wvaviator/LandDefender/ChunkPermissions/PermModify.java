@@ -24,5 +24,22 @@ public class PermModify {
 		}
 		
 	}
+	
+	public static void removePerms(int chunkX, int chunkZ) throws SQLException {
+
+		Connection c = Database.getConnection();
+		Statement stmt = null;
+		
+		String update = "DELETE FROM permissions WHERE chunkx = " + chunkX + " AND chunkz = " + chunkZ;
+		
+		try {
+			stmt = c.createStatement();
+			stmt.executeUpdate(update);
+		} finally {
+			stmt.close();
+			c.close();
+		}
+		
+	}
 
 }
