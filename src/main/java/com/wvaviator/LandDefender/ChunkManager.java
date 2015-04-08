@@ -3,7 +3,8 @@ package com.wvaviator.LandDefender;
 import java.sql.SQLException;
 import java.util.UUID;
 
-import com.wvaviator.LandDefender.ChunkPermissions.PermData;
+import com.wvaviator.LandDefender.ChunkPermissions.BlockPerms;
+import com.wvaviator.LandDefender.ChunkPermissions.PermCheck;
 import com.wvaviator.LandDefender.Data.ChunkData;
 import com.wvaviator.LandDefender.Reference.Chat;
 
@@ -34,6 +35,10 @@ public class ChunkManager {
 		if (ChunkData.doesPlayerShareChunk(player, chunkX, chunkZ) == true) {
 			return true;
 		}
+		
+		if (BlockPerms.isAllowedBlock(pos, world) == true) {
+			return true;
+		}
 
 		return false;
 
@@ -47,7 +52,7 @@ public class ChunkManager {
 		
 		if (ChunkData.isChunkOwned(chunkX, chunkZ) == false) {		
 			ChunkData.addChunk(player, chunkX, chunkZ);
-			PermData.populateDefaultValues(chunkX, chunkZ);
+			PermCheck.populateDefaultValues(chunkX, chunkZ);
 			
 			Chat.toChat(player, EnumChatFormatting.AQUA + "You claimed the chunk at " + EnumChatFormatting.GOLD + chunkX + EnumChatFormatting.AQUA + ", " + EnumChatFormatting.GOLD + chunkZ);
 			

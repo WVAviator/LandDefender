@@ -34,22 +34,11 @@ public class BlockBuildHandler {
 		EntityPlayerMP player = (EntityPlayerMP) e.entity;
 		BlockPos pos = e.pos;
 		World world = e.world;
-		Block block = world.getBlockState(pos).getBlock();
-		TileEntity te = world.getTileEntity(pos);
-		
-		if (te instanceof TileEntityChest) {
-		}
-		
-		if (block == Blocks.crafting_table) {	
-		}
-		
-		
-		if (ChunkManager.canPlayerUse(pos, player) == false) {
-	
-			Chat.toChat(player, Chat.noBuild);
-			e.setCanceled(true);
 
-			
+		
+		if (ChunkManager.canPlayerUse(pos, player) == false) {	
+			Chat.toChat(player, Chat.noBuild);
+			e.setCanceled(true);			
 		}
 		
 	}

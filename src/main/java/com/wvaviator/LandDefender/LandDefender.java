@@ -17,8 +17,10 @@ import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
 
 import com.google.common.eventbus.Subscribe;
+import com.wvaviator.LandDefender.Commands.AllowCommand;
 import com.wvaviator.LandDefender.Commands.ChunkInfoCommand;
 import com.wvaviator.LandDefender.Commands.ClaimCommand;
+import com.wvaviator.LandDefender.Commands.DenyCommand;
 import com.wvaviator.LandDefender.Commands.ListChunksCommand;
 import com.wvaviator.LandDefender.Commands.ProtectCommand;
 import com.wvaviator.LandDefender.Commands.ShareCommand;
@@ -117,6 +119,8 @@ public class LandDefender {
 		e.registerServerCommand(new ListChunksCommand());
 		e.registerServerCommand(new ProtectCommand());
 		e.registerServerCommand(new UnprotectCommand());
+		e.registerServerCommand(new AllowCommand());
+		e.registerServerCommand(new DenyCommand());
 		
 	}
 	
