@@ -21,8 +21,6 @@ public class BlockPerms {
 		int chunkZ = chunk.zPosition;
 		
 		if (block == Blocks.chest || block == Blocks.trapped_chest || block == Blocks.ender_chest){
-
-				System.out.println("Player tried to use chest!");
 				return PermCheck.canUseChests(chunkX, chunkZ);
 		}
 		
