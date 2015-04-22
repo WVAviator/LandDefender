@@ -162,7 +162,7 @@ public class ChunkManager {
 			
 		} else {
 			
-			if (LandDefender.canOverride == true) {
+			if (LDConfiguration.canOverride == true) {
 				Chat.toChat(player, Chat.useUnprotect);
 				return;
 			}

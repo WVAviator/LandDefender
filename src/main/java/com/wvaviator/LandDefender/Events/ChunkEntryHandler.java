@@ -3,6 +3,7 @@ package com.wvaviator.LandDefender.Events;
 import java.sql.SQLException;
 
 import com.google.common.eventbus.Subscribe;
+import com.wvaviator.LandDefender.LDConfiguration;
 import com.wvaviator.LandDefender.Data.ChunkData;
 import com.wvaviator.LandDefender.Reference.Chat;
 
@@ -23,7 +24,11 @@ public class ChunkEntryHandler {
 			return;
 		}
 		
-		EntityPlayerMP player = (EntityPlayerMP) e.entity;
+		EntityPlayerMP player = (EntityPlayerMP) e.entity;		
+
+		if (!(LDConfiguration.displayInfo) && !(player.canUseCommand(LDConfiguration.useProtectPerm, "protect"))) {
+			return;
+		}
 		
 		int oldChunkX = e.oldChunkX;
 		int oldChunkZ = e.oldChunkZ;

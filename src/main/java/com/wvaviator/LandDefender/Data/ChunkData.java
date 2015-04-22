@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.UUID;
 
+import com.wvaviator.LandDefender.LDConfiguration;
 import com.wvaviator.LandDefender.LandDefender;
 import com.wvaviator.LandDefender.Reference.Chat;
 import com.wvaviator.LandDefender.Reference.UUIDManager;
@@ -51,10 +52,16 @@ public class ChunkData {
 		stmt = c.createStatement();
 		ResultSet rs = stmt.executeQuery(query);
 		
+		if (!rs.next()) return false;
+		
 		String uuid = rs.getString("uuid");
 		UUID playerUUID = player.getUniqueID();
 		
 		if (uuid.equals(playerUUID.toString())) {
+			return true;
+		}
+		
+		if (uuid.equalsIgnoreCase("PROTECTION") && player.canUseCommand(LDConfiguration.useProtectPerm, "protect")) {
 			return true;
 		}
 
@@ -295,7 +302,7 @@ public class ChunkData {
 	public static void unprotectChunk(int chunkX, int chunkZ) throws SQLException {
 		
 		String update = null;
-		if (LandDefender.canOverride == true) {
+		if (LDConfiguration.canOverride == true) {
 			update = "DELETE FROM chunkdata WHERE chunkx = " + chunkX + " AND chunkz = " + chunkZ;
 		} else {
 			update = "DELETE FROM chunkdata WHERE uuid = 'PROTECTION' AND chunkx = " + chunkX + " AND chunkz = " + chunkZ;

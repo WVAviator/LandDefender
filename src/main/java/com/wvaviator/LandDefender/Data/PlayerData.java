@@ -5,8 +5,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import com.wvaviator.LandDefender.LDConfiguration;
 import com.wvaviator.LandDefender.LandDefender;
 import com.wvaviator.LandDefender.Reference.Chat;
+import com.wvaviator.LandDefender.Reference.UUIDManager;
 
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.EnumChatFormatting;
@@ -81,9 +83,7 @@ public class PlayerData {
 		
 	}
 	
-	public static void listAllOwned(EntityPlayerMP player, EntityPlayerMP querier) throws SQLException {
-		
-		String uuid = player.getUniqueID().toString();
+	public static void listAllOwned(String uuid, EntityPlayerMP querier) throws SQLException {
 		
 		if (uuid == null) {
 			Chat.toChat(querier, Chat.playerNotFound);
@@ -104,7 +104,7 @@ public class PlayerData {
 				return;
 			}
 			
-			Chat.toChat(querier, Chat.followingChunks + player.getName());
+			Chat.toChat(querier, Chat.followingChunks + UUIDManager.getUsernameFromStringUUID(uuid));
 			
 			do {
 				
@@ -237,7 +237,7 @@ public static int getAllowedChunks(EntityPlayerMP player) throws SQLException {
 
 	String uuid = player.getUniqueID().toString();
 	int allowed = 0;
-	int defaultAllowed = LandDefender.allowedChunks;
+	int defaultAllowed = LDConfiguration.allowedChunks;
 	
 	String query = "SELECT * FROM players WHERE uuid = '" + uuid + "'";
 	Connection c = Database.getConnection();

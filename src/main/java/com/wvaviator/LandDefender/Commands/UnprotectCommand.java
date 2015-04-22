@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.wvaviator.LandDefender.ChunkManager;
+import com.wvaviator.LandDefender.LDConfiguration;
 import com.wvaviator.LandDefender.LandDefender;
 import com.wvaviator.LandDefender.Reference.Chat;
 
@@ -67,7 +68,7 @@ public class UnprotectCommand implements ICommand {
 
 	@Override
 	public boolean canCommandSenderUse(ICommandSender sender) {
-		if (sender.canUseCommand(LandDefender.useProtectPerm, getName())) {
+		if (sender.canUseCommand(LDConfiguration.useProtectPerm, getName())) {
 			return true;
 		}
 		return false;

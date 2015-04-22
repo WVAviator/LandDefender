@@ -1,5 +1,6 @@
 package com.wvaviator.LandDefender.Reference;
 
+import com.wvaviator.LandDefender.LDConfiguration;
 import com.wvaviator.LandDefender.LandDefender;
 
 import net.minecraft.command.ICommandSender;
@@ -19,9 +20,9 @@ public class Chat {
 	public static String claimedLand = EnumChatFormatting.AQUA + "You have succesfully claimed this land!";
 	public static String followingChunks = EnumChatFormatting.AQUA + "The following chunks are owned by " + EnumChatFormatting.GOLD;
 	public static String followingSharedChunks = EnumChatFormatting.AQUA + "The following chunks are shared with " + EnumChatFormatting.GOLD;
-	public static String tooManyChunks = EnumChatFormatting.AQUA + "You have reached your maximum claim amount!\n" + EnumChatFormatting.AQUA + "You are limited to a maximum of " + EnumChatFormatting.GOLD + LandDefender.allowedChunks + EnumChatFormatting.AQUA + " chunks.";
-	public static String ownerDisplay = EnumChatFormatting.AQUA + "# " + EnumChatFormatting.GOLD;
-	public static String unowned = EnumChatFormatting.AQUA + "# Unowned";
+	public static String tooManyChunks = EnumChatFormatting.AQUA + "You have reached your maximum claim amount!\n" + EnumChatFormatting.AQUA + "You are limited to a maximum of " + EnumChatFormatting.GOLD + LDConfiguration.allowedChunks + EnumChatFormatting.AQUA + " chunks.";
+	public static String ownerDisplay = EnumChatFormatting.AQUA + LDConfiguration.chunkInfoPrefix + " " + EnumChatFormatting.GOLD;
+	public static String unowned = EnumChatFormatting.AQUA + LDConfiguration.chunkInfoPrefix + " Unowned";
 	public static String sharedWith = EnumChatFormatting.AQUA + "Shared with: ";
 	public static String onlyOwner = EnumChatFormatting.AQUA + "Only the chunk owner can add shared players!";
 	public static String invalidArgs = EnumChatFormatting.AQUA + "Invalid arguments!";
@@ -32,6 +33,7 @@ public class Chat {
 	public static String max20 = EnumChatFormatting.AQUA + "You are limited to 20 characters for the name!";
 	public static String unprotect = EnumChatFormatting.AQUA + "Removed all protections from chunk " + EnumChatFormatting.GOLD;
 	public static String updatedFor = EnumChatFormatting.AQUA + "Updated permissions for " + EnumChatFormatting.GOLD;
+	public static String noTP = EnumChatFormatting.AQUA + "You must own a chunk to teleport to it!";
 	
 	
 	public static void toChat(EntityPlayerMP player, String message) {

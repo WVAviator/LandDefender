@@ -24,6 +24,7 @@ import com.wvaviator.LandDefender.Commands.DenyCommand;
 import com.wvaviator.LandDefender.Commands.ListChunksCommand;
 import com.wvaviator.LandDefender.Commands.ProtectCommand;
 import com.wvaviator.LandDefender.Commands.ShareCommand;
+import com.wvaviator.LandDefender.Commands.TPChunkCommand;
 import com.wvaviator.LandDefender.Commands.UnclaimCommand;
 import com.wvaviator.LandDefender.Commands.UnprotectCommand;
 import com.wvaviator.LandDefender.Commands.UnshareCommand;
@@ -42,9 +43,6 @@ public class LandDefender {
 	public static String dataDirectory = null;
 	public static boolean databaseExists = false;
 	public Configuration config;
-	public static int allowedChunks = 0;
-	public static int useProtectPerm = 4;
-	public static boolean canOverride = true;
 	
 	
 	
@@ -52,15 +50,7 @@ public class LandDefender {
 	public void onPreInitialization(FMLPreInitializationEvent e) {
 		
 		this.config = new Configuration(e.getSuggestedConfigurationFile());
-		this.config.load();
-		
-		Property totalAllowedClaims = this.config.get(Configuration.CATEGORY_GENERAL, "Maximum Allowed Claims Per Player", 6);
-		allowedChunks = totalAllowedClaims.getInt();
-		Property useProtect = this.config.get(Configuration.CATEGORY_GENERAL, "Required Permission Level to use Protect Command", 4);
-		useProtectPerm = useProtect.getInt();
-		Property override = this.config.get(Configuration.CATEGORY_GENERAL, "Using /unprotect Can Override and Remove any Claimed Chunk", true);
-		canOverride = override.getBoolean();
-		this.config.save();
+		LDConfiguration.setupConfig(this.config);
 
 		directory = new File(e.getModConfigurationDirectory() + "/LandDefender/");
 		dataDirectory = directory.getPath() + "/";
@@ -121,6 +111,7 @@ public class LandDefender {
 		e.registerServerCommand(new UnprotectCommand());
 		e.registerServerCommand(new AllowCommand());
 		e.registerServerCommand(new DenyCommand());
+		e.registerServerCommand(new TPChunkCommand());
 		
 	}
 	

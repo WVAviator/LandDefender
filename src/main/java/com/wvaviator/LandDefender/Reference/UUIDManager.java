@@ -7,6 +7,7 @@ import java.sql.Statement;
 import java.util.UUID;
 
 import com.mojang.authlib.GameProfile;
+import com.wvaviator.LandDefender.LDConfiguration;
 import com.wvaviator.LandDefender.LandDefender;
 import com.wvaviator.LandDefender.Data.Database;
 
@@ -60,7 +61,7 @@ public class UUIDManager {
 			
 			stmt = c.createStatement();
 			ResultSet rs = stmt.executeQuery(query);
-			String username = rs.getString("name").toUpperCase();
+			String username = rs.getString("name");
 
 			return username;
 			
@@ -90,7 +91,7 @@ public class UUIDManager {
 	public static void updateUsername(EntityPlayerMP player) throws SQLException {
 		
 		String uuid = getStringUUIDFromPlayer(player);
-		String username = player.getName().toUpperCase();
+		String username = player.getName();
 		String update = "UPDATE players SET name = '" + username + "' WHERE  uuid = '" + uuid + "'";
 		
 		Statement stmt = null;
@@ -139,9 +140,9 @@ public class UUIDManager {
 	public static void addUsername(EntityPlayerMP player) throws SQLException {
 		
 		String uuid = getStringUUIDFromPlayer(player);
-		String username = player.getName().toUpperCase();
+		String username = player.getName();
 		
-		String update = "INSERT INTO players VALUES ('" + uuid + "', '" + username + "', " + LandDefender.allowedChunks + ")";
+		String update = "INSERT INTO players VALUES ('" + uuid + "', '" + username + "', " + LDConfiguration.allowedChunks + ")";
 		
 		Statement stmt = null;
 		Connection c = Database.getConnection();
@@ -162,9 +163,9 @@ public class UUIDManager {
 	
 	public static String getStringUUIDFromName(String username) throws SQLException {
 		
-		String name = username.toUpperCase();
+		String name = username;
 		
-		String query = "SELECT uuid, name FROM players WHERE name = '" + name + "'";
+		String query = "SELECT uuid, name FROM players WHERE UPPER(name) like UPPER('" + name + "')";
 		Statement stmt = null;
 		Connection c = Database.getConnection();
 		String uuid = null;

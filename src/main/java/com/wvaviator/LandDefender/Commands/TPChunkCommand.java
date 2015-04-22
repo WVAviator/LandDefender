@@ -5,9 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.wvaviator.LandDefender.LDConfiguration;
-import com.wvaviator.LandDefender.Data.PlayerData;
+import com.wvaviator.LandDefender.Data.ChunkData;
 import com.wvaviator.LandDefender.Reference.Chat;
-import com.wvaviator.LandDefender.Reference.UUIDManager;
+import com.wvaviator.LandDefender.Teleportation.Teleport;
 
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommand;
@@ -15,31 +15,31 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.BlockPos;
 
-public class ListChunksCommand implements ICommand {
-
-	private List aliases;
-	public ListChunksCommand() {
-		this.aliases = new ArrayList();
-		this.aliases.add("listchunks");
-		this.aliases.add("listclaims");
-	}
+public class TPChunkCommand implements ICommand {
 	
+	private List aliases;
+	public TPChunkCommand() {
+		this.aliases = new ArrayList();
+		this.aliases.add("tpchunk");
+		this.aliases.add("chunktp");
+		this.aliases.add("ctp");
+		this.aliases.add("tpc");
+	}
+
 	@Override
 	public int compareTo(Object o) {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
 	public String getName() {
-		// TODO Auto-generated method stub
-		return "listchunks";
+		return "tpchunk";
 	}
 
 	@Override
 	public String getCommandUsage(ICommandSender sender) {
 		// TODO Auto-generated method stub
-		return "/listchunks";
+		return "/tpchunk <x> <z>";
 	}
 
 	@Override
@@ -51,50 +51,41 @@ public class ListChunksCommand implements ICommand {
 	@Override
 	public void execute(ICommandSender sender, String[] args)
 			throws CommandException {
-
-		if(!(sender instanceof EntityPlayerMP)) {
+		
+		if (!(sender instanceof EntityPlayerMP)) {
 			Chat.toChat(sender, Chat.noConsole);
 			return;
 		}
-		
 		EntityPlayerMP player = (EntityPlayerMP) sender;
 		
-		if (args.length == 0) {
-		
-			try {
-			
-				PlayerData.listAllOwned(player.getUniqueID().toString(), player);
-			
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
+		if (args.length != 2) {
+			getCommandUsage(sender);
 			return;
 		}
 		
-		if (args.length == 1 && player.canUseCommand(LDConfiguration.useProtectPerm, "protect")) {
-			
-			String qPlayer = null;
-			try {
-				qPlayer = UUIDManager.getStringUUIDFromName(args[0]);
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-			
-			if (qPlayer == null) {
-				Chat.toChat(player, Chat.playerNotFound);
-				return;
-			}
-			
-			try {
-				PlayerData.listAllOwned(qPlayer, player);
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
+		int chunkX;
+		int chunkZ;
+		
+		try {
+			chunkX = Integer.parseInt(args[0]);
+			chunkZ = Integer.parseInt(args[1]);
+		} catch (NumberFormatException e) {
+			Chat.toChat(player, Chat.invalidArgs);
 			return;
-			
 		}
 		
-		getCommandUsage(sender);
+		try {
+			if (!(player.canUseCommand(LDConfiguration.useProtectPerm, "protect")) &&
+					!(ChunkData.doesPlayerOwnChunk(player, chunkX, chunkZ))) {
+				Chat.toChat(player, Chat.noTP);
+				return;	
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return;
+		}
+		
+		Teleport.teleportToChunk(player, chunkX, chunkZ);
 
 	}
 

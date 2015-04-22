@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.wvaviator.LandDefender.ChunkManager;
+import com.wvaviator.LandDefender.LDConfiguration;
 import com.wvaviator.LandDefender.LandDefender;
 import com.wvaviator.LandDefender.ChunkPermissions.PermManager;
 import com.wvaviator.LandDefender.Data.ChunkData;
@@ -78,7 +79,7 @@ public class AllowCommand implements ICommand {
 				return;
 			}
 			
-			if (ChunkData.doesPlayerOwnChunk(player, chunkX, chunkZ) == false && (!(sender.canUseCommand(LandDefender.useProtectPerm, "protect")))) {
+			if (ChunkData.doesPlayerOwnChunk(player, chunkX, chunkZ) == false && (!(sender.canUseCommand(LDConfiguration.useProtectPerm, "protect")))) {
 				Chat.toChat(player, Chat.doNotOwn);
 				return;
 			}
