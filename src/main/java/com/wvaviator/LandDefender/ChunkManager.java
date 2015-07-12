@@ -8,6 +8,7 @@ import com.wvaviator.LandDefender.ChunkPermissions.PermCheck;
 import com.wvaviator.LandDefender.ChunkPermissions.PermModify;
 import com.wvaviator.LandDefender.Data.ChunkData;
 import com.wvaviator.LandDefender.Reference.Chat;
+import com.wvaviator.LandDefender.WorldManager.WorldsManager;
 
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.BlockPos;
@@ -24,16 +25,17 @@ public class ChunkManager {
 		
 		int chunkX = chunk.xPosition;
 		int chunkZ = chunk.zPosition;
+		int dimension = WorldsManager.getDimension(player);
 		
-		if (ChunkData.isChunkOwned(chunkX, chunkZ) == false) {
+		if (ChunkData.isChunkOwned(chunkX, chunkZ, dimension) == false) {
 			return true;
 		}
 		
-		if (ChunkData.doesPlayerOwnChunk(player, chunkX, chunkZ) == true) {
+		if (ChunkData.doesPlayerOwnChunk(player, chunkX, chunkZ, dimension) == true) {
 			return true;
 		}
 		
-		if (ChunkData.doesPlayerShareChunk(player, chunkX, chunkZ) == true) {
+		if (ChunkData.doesPlayerShareChunk(player, chunkX, chunkZ, dimension) == true) {
 			return true;
 		}
 		
@@ -50,10 +52,11 @@ public class ChunkManager {
 		Chunk chunk = player.getEntityWorld().getChunkFromBlockCoords(player.getPosition());
 		int chunkX = chunk.xPosition;
 		int chunkZ = chunk.zPosition;
+		int dimension = WorldsManager.getDimension(player);
 		
-		if (ChunkData.isChunkOwned(chunkX, chunkZ) == false) {		
-			ChunkData.addChunk(player, chunkX, chunkZ);
-			PermCheck.populateDefaultValues(chunkX, chunkZ);
+		if (ChunkData.isChunkOwned(chunkX, chunkZ, dimension) == false) {		
+			ChunkData.addChunk(player, chunkX, chunkZ, dimension);
+			PermCheck.populateDefaultValues(chunkX, chunkZ, dimension);
 			
 			Chat.toChat(player, EnumChatFormatting.AQUA + "You claimed the chunk at " + EnumChatFormatting.GOLD + chunkX + EnumChatFormatting.AQUA + ", " + EnumChatFormatting.GOLD + chunkZ);
 			
@@ -69,16 +72,17 @@ public class ChunkManager {
 		Chunk chunk = player.getEntityWorld().getChunkFromBlockCoords(player.getPosition());
 		int chunkX = chunk.xPosition;
 		int chunkZ = chunk.zPosition;
+		int dimension = WorldsManager.getDimension(player);
 		
-		if (ChunkData.isChunkOwned(chunkX, chunkZ) == true) {
+		if (ChunkData.isChunkOwned(chunkX, chunkZ, dimension) == true) {
 
 			String uuid = player.getUniqueID().toString();
 			
-			if(ChunkData.whichPlayerOwnsChunk(chunkX, chunkZ).equals(uuid)) {
+			if(ChunkData.whichPlayerOwnsChunk(chunkX, chunkZ, dimension).equals(uuid)) {
 			
-			ChunkData.removeChunk(player, chunkX, chunkZ);
-			ChunkData.removeAllShared(chunkX, chunkZ);
-			PermModify.removePerms(chunkX, chunkZ);
+			ChunkData.removeChunk(player, chunkX, chunkZ, dimension);
+			ChunkData.removeAllShared(chunkX, chunkZ, dimension);
+			PermModify.removePerms(chunkX, chunkZ, dimension);
 			Chat.toChat(player, EnumChatFormatting.AQUA + "You unclaimed the chunk at " + EnumChatFormatting.GOLD + chunkX + EnumChatFormatting.AQUA + ", " + EnumChatFormatting.GOLD + chunkZ);
 			return;
 			}
@@ -94,10 +98,11 @@ public class ChunkManager {
 		Chunk chunk = player.getEntityWorld().getChunkFromBlockCoords(player.getPosition());
 		int chunkX = chunk.xPosition;
 		int chunkZ = chunk.zPosition;
+		int dimension = WorldsManager.getDimension(player);
 		
-		if (ChunkData.doesPlayerOwnChunk(player, chunkX, chunkZ) == true) {
+		if (ChunkData.doesPlayerOwnChunk(player, chunkX, chunkZ, dimension) == true) {
 			
-			ChunkData.addShared(player, trustee, chunkX, chunkZ);
+			ChunkData.addShared(player, trustee, chunkX, chunkZ, dimension);
 
 			
 		} else {
@@ -114,14 +119,15 @@ public class ChunkManager {
 		Chunk chunk = player.getEntityWorld().getChunkFromBlockCoords(player.getPosition());
 		int chunkX = chunk.xPosition;
 		int chunkZ = chunk.zPosition;
+		int dimension = WorldsManager.getDimension(player);
 		
 		String uuid = player.getUniqueID().toString();
 		
 		
 		
-		if (uuid.equals(ChunkData.whichPlayerOwnsChunk(chunkX, chunkZ))) {
+		if (uuid.equals(ChunkData.whichPlayerOwnsChunk(chunkX, chunkZ, dimension))) {
 			
-			ChunkData.removeShared(player, trustee, chunkX, chunkZ);
+			ChunkData.removeShared(player, trustee, chunkX, chunkZ, dimension);
 			
 		} else {
 			
@@ -136,8 +142,9 @@ public class ChunkManager {
 		Chunk chunk = player.getEntityWorld().getChunkFromBlockCoords(player.getPosition());
 		int chunkX = chunk.xPosition;
 		int chunkZ = chunk.zPosition;
+		int dimension = WorldsManager.getDimension(player);
 		
-		boolean doesOwn = ChunkData.doesPlayerOwnChunk(player, chunkX, chunkZ);
+		boolean doesOwn = ChunkData.doesPlayerOwnChunk(player, chunkX, chunkZ, dimension);
 		
 		if (doesOwn == false) {
 			Chat.toChat(player, Chat.doNotOwn);
@@ -145,7 +152,7 @@ public class ChunkManager {
 			return;
 		}
 		
-		ChunkData.removeAllShared(chunkX, chunkZ);
+		ChunkData.removeAllShared(chunkX, chunkZ, dimension);
 		
 	}
 	
@@ -154,9 +161,10 @@ public class ChunkManager {
 		Chunk chunk = player.getEntityWorld().getChunkFromBlockCoords(player.getPosition());
 		int chunkX = chunk.xPosition;
 		int chunkZ = chunk.zPosition;
+		int dimension = WorldsManager.getDimension(player);
 		
-		if (ChunkData.isChunkOwned(chunkX, chunkZ) == false) {		
-			ChunkData.protectChunk(player, name, chunkX, chunkZ);
+		if (ChunkData.isChunkOwned(chunkX, chunkZ, dimension) == false) {		
+			ChunkData.protectChunk(player, name, chunkX, chunkZ, dimension);
 			
 			Chat.toChat(player, EnumChatFormatting.AQUA + "You claimed the chunk at " + EnumChatFormatting.GOLD + chunkX + EnumChatFormatting.AQUA + ", " + EnumChatFormatting.GOLD + chunkZ);
 			
@@ -177,8 +185,9 @@ public class ChunkManager {
 		Chunk chunk = player.getEntityWorld().getChunkFromBlockCoords(player.getPosition());
 		int chunkX = chunk.xPosition;
 		int chunkZ = chunk.zPosition;
+		int dimension = WorldsManager.getDimension(player);
 		
-		if (ChunkData.isChunkOwned(chunkX, chunkZ) == false) {			
+		if (ChunkData.isChunkOwned(chunkX, chunkZ, dimension) == false) {			
 			Chat.toChat(player, Chat.nobodyOwns);
 			return;
 		}
@@ -186,8 +195,8 @@ public class ChunkManager {
 
 		Chat.toChat(player, Chat.unprotect + chunkX + EnumChatFormatting.AQUA + ", " + EnumChatFormatting.GOLD + chunkZ);
 		
-		ChunkData.unprotectChunk(chunkX, chunkZ);
-		PermModify.removePerms(chunkX, chunkZ);
+		ChunkData.unprotectChunk(chunkX, chunkZ, dimension);
+		PermModify.removePerms(chunkX, chunkZ, dimension);
 		
 	}
 	

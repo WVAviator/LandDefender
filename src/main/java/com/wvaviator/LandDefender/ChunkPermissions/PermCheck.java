@@ -17,81 +17,81 @@ public class PermCheck {
 	 * beds, trapdoors, buttons, levers, beacons
 	 */
 
-	public static boolean canUseChests(int chunkX, int chunkZ) throws SQLException {	
-		return checkData(chunkX, chunkZ, "chests");
+	public static boolean canUseChests(int chunkX, int chunkZ, int dimension) throws SQLException {	
+		return checkData(chunkX, chunkZ, "chests", dimension);
 	}
 
-	public static boolean canUseDoors(int chunkX, int chunkZ) {
-		return checkData(chunkX, chunkZ, "doors");
+	public static boolean canUseDoors(int chunkX, int chunkZ, int dimension) {
+		return checkData(chunkX, chunkZ, "doors", dimension);
 	}
 	
-	public static boolean canUseFurnaces(int chunkX, int chunkZ) {
-		return checkData(chunkX, chunkZ, "furnaces");
+	public static boolean canUseFurnaces(int chunkX, int chunkZ, int dimension) {
+		return checkData(chunkX, chunkZ, "furnaces", dimension);
 	}
 	
-	public static boolean canUseBrew(int chunkX, int chunkZ) {
-		return checkData(chunkX, chunkZ, "brewingstands");
+	public static boolean canUseBrew(int chunkX, int chunkZ, int dimension) {
+		return checkData(chunkX, chunkZ, "brewingstands", dimension);
 	}
 	
-	public static boolean canUseDispensers(int chunkX, int chunkZ) {
-		return checkData(chunkX, chunkZ, "dispensers");
+	public static boolean canUseDispensers(int chunkX, int chunkZ, int dimension) {
+		return checkData(chunkX, chunkZ, "dispensers", dimension);
 	}
 	
-	public static boolean canUseDroppers(int chunkX, int chunkZ) {
-		return checkData(chunkX, chunkZ, "droppers");
+	public static boolean canUseDroppers(int chunkX, int chunkZ, int dimension) {
+		return checkData(chunkX, chunkZ, "droppers", dimension);
 	}
 	
-	public static boolean canUseHoppers(int chunkX, int chunkZ) {
-		return checkData(chunkX, chunkZ, "hoppers");
+	public static boolean canUseHoppers(int chunkX, int chunkZ, int dimension) {
+		return checkData(chunkX, chunkZ, "hoppers", dimension);
 	}
 	
-	public static boolean canUseJukeboxes(int chunkX, int chunkZ) {
-		return checkData(chunkX, chunkZ, "jukeboxes");
+	public static boolean canUseJukeboxes(int chunkX, int chunkZ, int dimension) {
+		return checkData(chunkX, chunkZ, "jukeboxes", dimension);
 	}
 	
-	public static boolean canUseSigns(int chunkX, int chunkZ) {
-		return checkData(chunkX, chunkZ, "signs");
+	public static boolean canUseSigns(int chunkX, int chunkZ, int dimension) {
+		return checkData(chunkX, chunkZ, "signs", dimension);
 	}
 	
-	public static boolean canUseGates(int chunkX, int chunkZ) {
-		return checkData(chunkX, chunkZ, "gates");
+	public static boolean canUseGates(int chunkX, int chunkZ, int dimension) {
+		return checkData(chunkX, chunkZ, "gates", dimension);
 	}
 	
-	public static boolean canEnchant(int chunkX, int chunkZ) {
-		return checkData(chunkX, chunkZ, "enchantingtables");
+	public static boolean canEnchant(int chunkX, int chunkZ, int dimension) {
+		return checkData(chunkX, chunkZ, "enchantingtables", dimension);
 	}
 	
-	public static boolean canUseAnvils(int chunkX, int chunkZ) {
-		return checkData(chunkX, chunkZ, "anvils");
+	public static boolean canUseAnvils(int chunkX, int chunkZ, int dimension) {
+		return checkData(chunkX, chunkZ, "anvils", dimension);
 	}
 	
-	public static boolean canUseBanners(int chunkX, int chunkZ) {
-		return checkData(chunkX, chunkZ, "banners");
+	public static boolean canUseBanners(int chunkX, int chunkZ, int dimension) {
+		return checkData(chunkX, chunkZ, "banners", dimension);
 	}
 	
-	public static boolean canUseBeds(int chunkX, int chunkZ) {
-		return checkData(chunkX, chunkZ, "beds");
+	public static boolean canUseBeds(int chunkX, int chunkZ, int dimension) {
+		return checkData(chunkX, chunkZ, "beds", dimension);
 	}
 	
-	public static boolean canUseTrapdoors(int chunkX, int chunkZ) {
-		return checkData(chunkX, chunkZ, "trapdoors");
+	public static boolean canUseTrapdoors(int chunkX, int chunkZ, int dimension) {
+		return checkData(chunkX, chunkZ, "trapdoors", dimension);
 	}
 	
-	public static boolean canUseButtons(int chunkX, int chunkZ) {
-		return checkData(chunkX, chunkZ, "buttons");
+	public static boolean canUseButtons(int chunkX, int chunkZ, int dimension) {
+		return checkData(chunkX, chunkZ, "buttons", dimension);
 	}
 	
-	public static boolean canUseLevers(int chunkX, int chunkZ) {
-		return checkData(chunkX, chunkZ, "levers");
+	public static boolean canUseLevers(int chunkX, int chunkZ, int dimension) {
+		return checkData(chunkX, chunkZ, "levers", dimension);
 	}
 	
-	public static boolean canUseBeacons(int chunkX, int chunkZ) {
-		return checkData(chunkX, chunkZ, "beacons");
+	public static boolean canUseBeacons(int chunkX, int chunkZ, int dimension) {
+		return checkData(chunkX, chunkZ, "beacons", dimension);
 	}
 	
-	public static void populateDefaultValues(int chunkX, int chunkZ) throws SQLException {
+	public static void populateDefaultValues(int chunkX, int chunkZ, int dimension) throws SQLException {
 		
-		String update = "INSERT INTO permissions (chunkx, chunkz) VALUES (" + chunkX + ", " + chunkZ + ")";
+		String update = "INSERT INTO permissions (chunkx, chunkz, dimension) VALUES (" + chunkX + ", " + chunkZ + ", " + dimension + ")";
 		Connection c = Database.getConnection();
 		Statement stmt = null;
 		
@@ -104,9 +104,9 @@ public class PermCheck {
 		}
 	}
 	
-	public static boolean checkData(int chunkX, int chunkZ, String column) {
+	public static boolean checkData(int chunkX, int chunkZ, String column, int dimension) {
 		
-		String query = "SELECT * FROM permissions WHERE chunkx = " + chunkX + " AND chunkz = " + chunkZ;
+		String query = "SELECT * FROM permissions WHERE chunkx = " + chunkX + " AND chunkz = " + chunkZ + " AND dimension = " + dimension;
 		Connection c;
 		try {
 			c = Database.getConnection();
@@ -114,8 +114,8 @@ public class PermCheck {
 		try {
 			stmt = c.createStatement();
 			ResultSet rs = stmt.executeQuery(query);
-			if ((!rs.next()) && (ChunkData.isChunkOwned(chunkX, chunkZ) == true)) {
-				populateDefaultValues(chunkX, chunkZ);
+			if ((!rs.next()) && (ChunkData.isChunkOwned(chunkX, chunkZ, dimension) == true)) {
+				populateDefaultValues(chunkX, chunkZ, dimension);
 			}
 
 			String result = rs.getString(column);
@@ -137,9 +137,9 @@ public class PermCheck {
 		
 	}
 	
-public static void ensureData(int chunkX, int chunkZ) {
+public static void ensureData(int chunkX, int chunkZ, int dimension) {
 		
-		String query = "SELECT * FROM permissions WHERE chunkx = " + chunkX + " AND chunkz = " + chunkZ;
+		String query = "SELECT * FROM permissions WHERE chunkx = " + chunkX + " AND chunkz = " + chunkZ + " AND dimension = " + dimension;
 		Connection c;
 		try {
 			c = Database.getConnection();
@@ -147,8 +147,8 @@ public static void ensureData(int chunkX, int chunkZ) {
 		try {
 			stmt = c.createStatement();
 			ResultSet rs = stmt.executeQuery(query);
-			if ((!rs.next()) && (ChunkData.isChunkOwned(chunkX, chunkZ) == true)) {
-				populateDefaultValues(chunkX, chunkZ);
+			if ((!rs.next()) && (ChunkData.isChunkOwned(chunkX, chunkZ, dimension) == true)) {
+				populateDefaultValues(chunkX, chunkZ, dimension);
 				return;
 			}
 			

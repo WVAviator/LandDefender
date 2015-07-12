@@ -6,6 +6,7 @@ import com.google.common.eventbus.Subscribe;
 import com.wvaviator.LandDefender.LDConfiguration;
 import com.wvaviator.LandDefender.Data.ChunkData;
 import com.wvaviator.LandDefender.Reference.Chat;
+import com.wvaviator.LandDefender.WorldManager.WorldsManager;
 
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.EnumChatFormatting;
@@ -32,11 +33,14 @@ public class ChunkEntryHandler {
 		
 		int oldChunkX = e.oldChunkX;
 		int oldChunkZ = e.oldChunkZ;
+		
 		int chunkX = e.newChunkX;
 		int chunkZ = e.newChunkZ;
+		
+		int dimension = WorldsManager.getDimension(player);
 			
-		boolean oldChunkOwned = ChunkData.isChunkOwned(oldChunkX, oldChunkZ);
-		boolean newChunkOwned = ChunkData.isChunkOwned(chunkX, chunkZ);
+		boolean oldChunkOwned = ChunkData.isChunkOwned(oldChunkX, oldChunkZ, dimension);
+		boolean newChunkOwned = ChunkData.isChunkOwned(chunkX, chunkZ, dimension);
 		
 		if (oldChunkOwned == false && newChunkOwned == false) {
 			return;
@@ -44,8 +48,8 @@ public class ChunkEntryHandler {
 		
 		if (oldChunkOwned == true && newChunkOwned == true) {
 			
-			String oldOwner = ChunkData.whichPlayerOwnsChunkByName(oldChunkX, oldChunkZ);
-			String newOwner = ChunkData.whichPlayerOwnsChunkByName(chunkX, chunkZ);
+			String oldOwner = ChunkData.whichPlayerOwnsChunkByName(oldChunkX, oldChunkZ, dimension);
+			String newOwner = ChunkData.whichPlayerOwnsChunkByName(chunkX, chunkZ, dimension);
 			
 			if (oldOwner.equals(newOwner)) {
 				return;
@@ -56,7 +60,7 @@ public class ChunkEntryHandler {
 		}
 		
 		if (oldChunkOwned == false) {
-			String owner = ChunkData.whichPlayerOwnsChunkByName(chunkX, chunkZ);
+			String owner = ChunkData.whichPlayerOwnsChunkByName(chunkX, chunkZ, dimension);
 			Chat.toChat(player, Chat.ownerDisplay + owner);
 		} else {
 			

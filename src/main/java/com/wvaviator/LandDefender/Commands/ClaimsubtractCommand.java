@@ -4,29 +4,27 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.wvaviator.LandDefender.ChunkManager;
-import com.wvaviator.LandDefender.LDConfiguration;
-import com.wvaviator.LandDefender.LandDefender;
-import com.wvaviator.LandDefender.ChunkPermissions.PermManager;
-import com.wvaviator.LandDefender.Data.ChunkData;
+import com.wvaviator.LandDefender.Data.PlayerData;
 import com.wvaviator.LandDefender.Reference.Chat;
-import com.wvaviator.LandDefender.WorldManager.WorldsManager;
+import com.wvaviator.LandDefender.Reference.UUIDManager;
 
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.BlockPos;
-import net.minecraft.world.chunk.Chunk;
+import net.minecraft.util.EnumChatFormatting;
 
-public class AllowCommand implements ICommand {
-	
+public class ClaimsubtractCommand implements ICommand {
+
 	private List aliases;
-	public AllowCommand() {
+	public ClaimsubtractCommand() {
 		this.aliases = new ArrayList();
-		this.aliases.add("allow");
+		this.aliases.add("claimsubtract");
+		this.aliases.add("subtractclaim");
+		this.aliases.add("subtractclaims");
+		
 	}
-
+	
 	@Override
 	public int compareTo(Object o) {
 		// TODO Auto-generated method stub
@@ -36,13 +34,13 @@ public class AllowCommand implements ICommand {
 	@Override
 	public String getName() {
 		// TODO Auto-generated method stub
-		return "allow";
+		return "claimsubtract";
 	}
 
 	@Override
 	public String getCommandUsage(ICommandSender sender) {
 		// TODO Auto-generated method stub
-		return "/allow <block>";
+		return "/claimsubtract <player> <claims>";
 	}
 
 	@Override
@@ -55,56 +53,67 @@ public class AllowCommand implements ICommand {
 	public void execute(ICommandSender sender, String[] args)
 			throws CommandException {
 		
-		if (!(sender instanceof EntityPlayerMP)) {
-			Chat.toChat(sender, Chat.noConsole);
+		if (args.length > 2 || args.length < 2) {
+			Chat.toChat(sender, Chat.invalidArgs);
 			return;
 		}
 		
-		EntityPlayerMP player = (EntityPlayerMP) sender;
-		
-		if (args.length == 0 || args.length > 1) {
-			getCommandUsage(sender);
-			return;
-		}
-		
-		String allowed = args[0];
-		
-		Chunk chunk = player.getEntityWorld().getChunkFromBlockCoords(player.getPosition());
-		int chunkX = chunk.xPosition;
-		int chunkZ = chunk.zPosition;
-		int dimension = WorldsManager.getDimension(player);
-		
+		int claims;
 		
 		try {
-			if (ChunkData.isChunkOwned(chunkX, chunkZ, dimension) == false) {
-				Chat.toChat(player, Chat.doNotOwn);
-				return;
-			}
-			
-			if (ChunkData.doesPlayerOwnChunk(player, chunkX, chunkZ, dimension) == false && (!(sender.canUseCommand(LDConfiguration.useProtectPerm, "protect")))) {
-				Chat.toChat(player, Chat.doNotOwn);
+			claims = Integer.parseInt(args[1]);
+		} catch (NumberFormatException e) {
+			Chat.toChat(sender, Chat.invalidArgs);
+			return;
+		}
+		
+		if (claims < 0) {
+			Chat.toChat(sender, Chat.noNegative);
+			return;
+		}
+		
+		String username = args[0];
+		
+		try {
+			if (UUIDManager.getStringUUIDFromName(username) == null) {
+				Chat.toChat(sender, Chat.playerNotFound);
 				return;
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		
+		int newTotal = 0;
 		
 		try {
-			
-			PermManager.setPerm(player, allowed, true, chunkX, chunkZ, dimension);
-			
+		String uuid = UUIDManager.getStringUUIDFromName(username);
+		username = UUIDManager.getUsernameFromStringUUID(uuid);
+		
+		int current = PlayerData.getAllowedChunks(uuid);
+		newTotal = current - claims;
+		
+		if (newTotal < 0) {
+			Chat.toChat(sender, Chat.notEnoughClaims);
+			newTotal = 0;
+		}
+		
+		PlayerData.updateAllowedChunks(uuid, newTotal);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		
+		
+		Chat.toChat(sender, EnumChatFormatting.AQUA + "Updated allowed claims to " + newTotal + " for " + username + ".");
 		
 
 	}
 
 	@Override
 	public boolean canCommandSenderUse(ICommandSender sender) {
-		// TODO Auto-generated method stub
-		return true;
+		if (sender.canUseCommand(4, "claimset")) {
+			return true;
+		}
+		return false;
 	}
 
 	@Override

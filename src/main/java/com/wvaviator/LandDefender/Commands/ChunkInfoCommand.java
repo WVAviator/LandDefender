@@ -8,6 +8,7 @@ import java.util.UUID;
 import com.wvaviator.LandDefender.Data.ChunkData;
 import com.wvaviator.LandDefender.Data.PlayerData;
 import com.wvaviator.LandDefender.Reference.Chat;
+import com.wvaviator.LandDefender.WorldManager.WorldsManager;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.command.CommandException;
@@ -68,16 +69,17 @@ public class ChunkInfoCommand implements ICommand {
 		Chunk chunk = player.getEntityWorld().getChunkFromBlockCoords(player.getPosition());
 		int chunkX = chunk.xPosition;
 		int chunkZ = chunk.zPosition;
+		int dimension = WorldsManager.getDimension(player);
 		String name = null;
 		
 		try {
-			if (ChunkData.isChunkOwned(chunkX, chunkZ) == false) {
+			if (ChunkData.isChunkOwned(chunkX, chunkZ, dimension) == false) {
 				
 				Chat.toChat(sender, Chat.nobodyOwns);
 				return;	
 			}
 
-			name = ChunkData.whichPlayerOwnsChunkByName(chunkX, chunkZ);
+			name = ChunkData.whichPlayerOwnsChunkByName(chunkX, chunkZ, dimension);
 			Chat.toChat(player,  Chat.ownedBy + EnumChatFormatting.GOLD + name);
 			
 			if (PlayerData.getTotalSharedForChunk(chunkX, chunkZ) > 0) {

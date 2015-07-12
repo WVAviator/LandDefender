@@ -89,7 +89,7 @@ public class PlayerData {
 			Chat.toChat(querier, Chat.playerNotFound);
 		}
 		
-		String query = "SELECT id, chunkx, chunkz FROM chunkdata WHERE uuid = '" + uuid + "' AND isowner ='TRUE'";
+		String query = "SELECT id, chunkx, chunkz, dimension FROM chunkdata WHERE uuid = '" + uuid + "' AND isowner ='TRUE'";
 		
 		Connection c = Database.getConnection();
 		Statement stmt = null;
@@ -104,14 +104,18 @@ public class PlayerData {
 				return;
 			}
 			
+			int allowed = getAllowedChunks(uuid);
+			
+			Chat.toChat(querier, EnumChatFormatting.AQUA + "Maximum Allowed: " + allowed);
 			Chat.toChat(querier, Chat.followingChunks + UUIDManager.getUsernameFromStringUUID(uuid));
 			
 			do {
 				
 				int chunkX = rs.getInt("chunkx");
 				int chunkZ = rs.getInt("chunkz");
+				int dimension = rs.getInt("dimension");
 				
-				Chat.toChat(querier, EnumChatFormatting.AQUA + "Chunk: " + EnumChatFormatting.GOLD + chunkX + EnumChatFormatting.AQUA + ", " + EnumChatFormatting.GOLD + chunkZ);
+				Chat.toChat(querier, EnumChatFormatting.AQUA + "Chunk: " + EnumChatFormatting.GOLD + chunkX + EnumChatFormatting.AQUA + ", " + EnumChatFormatting.GOLD + chunkZ + EnumChatFormatting.AQUA + ", Dim " + dimension);
 				
 			} while(rs.next());
 			
@@ -233,29 +237,40 @@ public static int getTotalSharedForChunk(int chunkX, int chunkZ) throws SQLExcep
 		
 	}
 
-public static int getAllowedChunks(EntityPlayerMP player) throws SQLException {
+public static int getAllowedChunks(String uuid) throws SQLException {
 
-	String uuid = player.getUniqueID().toString();
 	int allowed = 0;
-	int defaultAllowed = LDConfiguration.allowedChunks;
 	
 	String query = "SELECT * FROM players WHERE uuid = '" + uuid + "'";
 	Connection c = Database.getConnection();
 	Statement stmt = null;
 	
 	try {
+		
 		stmt = c.createStatement();
 		ResultSet rs = stmt.executeQuery(query);
 		allowed = rs.getInt("protections");
 		
-		if (allowed < defaultAllowed) {
-			String update = "UPDATE players SET protections = " + defaultAllowed + " WHERE uuid = '" + uuid + "'";
-			stmt.executeUpdate(update);
-			
-			allowed = defaultAllowed;
-		}
-		
 		return allowed;
+		
+	} finally {
+		stmt.close();
+		c.close();
+	}
+	
+}
+
+public static void updateAllowedChunks(String uuid, int newAllowed) throws SQLException {
+	
+	String update = "UPDATE players SET protections = " + newAllowed + " WHERE uuid = '" + uuid + "'";
+	Connection c = Database.getConnection();
+	Statement stmt = null;
+	
+	try {
+		
+		stmt = c.createStatement();
+		stmt.executeUpdate(update);
+		
 	} finally {
 		stmt.close();
 		c.close();

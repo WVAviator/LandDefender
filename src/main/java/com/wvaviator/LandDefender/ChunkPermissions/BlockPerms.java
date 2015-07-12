@@ -2,6 +2,8 @@ package com.wvaviator.LandDefender.ChunkPermissions;
 
 import java.sql.SQLException;
 
+import com.wvaviator.LandDefender.WorldManager.WorldsManager;
+
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntity;
@@ -19,9 +21,10 @@ public class BlockPerms {
 		Chunk chunk = world.getChunkFromBlockCoords(pos);
 		int chunkX = chunk.xPosition;
 		int chunkZ = chunk.zPosition;
+		int dimension = WorldsManager.getDimension(world);
 		
 		if (block == Blocks.chest || block == Blocks.trapped_chest || block == Blocks.ender_chest){
-				return PermCheck.canUseChests(chunkX, chunkZ);
+				return PermCheck.canUseChests(chunkX, chunkZ, dimension);
 		}
 		
 		
@@ -30,74 +33,74 @@ public class BlockPerms {
 				block == Blocks.iron_door || block == Blocks.spruce_door ||
 				block == Blocks.oak_door) {
 			
-				return PermCheck.canUseDoors(chunkX, chunkZ);			
+				return PermCheck.canUseDoors(chunkX, chunkZ, dimension);			
 		}
 	
 	
 		if (block == Blocks.furnace || block == Blocks.lit_furnace) {		
-			return PermCheck.canUseFurnaces(chunkX, chunkZ);		
+			return PermCheck.canUseFurnaces(chunkX, chunkZ, dimension);		
 		}
 		
 		if (block == Blocks.brewing_stand) {
-			return PermCheck.canUseBrew(chunkX, chunkZ);
+			return PermCheck.canUseBrew(chunkX, chunkZ, dimension);
 		}
 		
 		if (block == Blocks.dispenser) {
-			return PermCheck.canUseDispensers(chunkX, chunkZ);
+			return PermCheck.canUseDispensers(chunkX, chunkZ, dimension);
 		}
 	
 		if (block == Blocks.dropper) {
-			return PermCheck.canUseDroppers(chunkX, chunkZ);
+			return PermCheck.canUseDroppers(chunkX, chunkZ, dimension);
 		}
 		
 		if (block == Blocks.hopper) {
-			return PermCheck.canUseHoppers(chunkX, chunkZ);
+			return PermCheck.canUseHoppers(chunkX, chunkZ, dimension);
 		}
 		
 		if (block == Blocks.jukebox) {
-			return PermCheck.canUseJukeboxes(chunkX, chunkZ);
+			return PermCheck.canUseJukeboxes(chunkX, chunkZ, dimension);
 		}
 		
 		if (block == Blocks.wall_sign) {
-			return PermCheck.canUseSigns(chunkX, chunkZ);
+			return PermCheck.canUseSigns(chunkX, chunkZ, dimension);
 		}
 		
 		if (block == Blocks.acacia_fence_gate || block == Blocks.dark_oak_fence_gate ||
 				block == Blocks.oak_fence_gate || block == Blocks.spruce_fence_gate ||
 				block == Blocks.jungle_fence_gate || block == Blocks.birch_fence_gate) {
-			return PermCheck.canUseGates(chunkX, chunkZ);
+			return PermCheck.canUseGates(chunkX, chunkZ, dimension);
 		}
 		
 		if (block == Blocks.enchanting_table) {
-			return PermCheck.canEnchant(chunkX, chunkZ);
+			return PermCheck.canEnchant(chunkX, chunkZ, dimension);
 		}
 		
 		if (block == Blocks.anvil) {
-			return PermCheck.canUseAnvils(chunkX, chunkZ);
+			return PermCheck.canUseAnvils(chunkX, chunkZ, dimension);
 		}
 		
 		if (block == Blocks.wall_banner || block == Blocks.standing_banner) {
-			return PermCheck.canUseBanners(chunkX, chunkZ);
+			return PermCheck.canUseBanners(chunkX, chunkZ, dimension);
 		}
 		
 		if (block == Blocks.bed) {
-			return PermCheck.canUseBeds(chunkX, chunkZ);
+			return PermCheck.canUseBeds(chunkX, chunkZ, dimension);
 		}
 		
 		if (block == Blocks.trapdoor) {
-			return PermCheck.canUseTrapdoors(chunkX, chunkZ);
+			return PermCheck.canUseTrapdoors(chunkX, chunkZ, dimension);
 		}
 		
 		if (block == Blocks.stone_button || block == Blocks.wooden_button) {
-			return PermCheck.canUseButtons(chunkX, chunkZ);
+			return PermCheck.canUseButtons(chunkX, chunkZ, dimension);
 		}
 		
 		if (block == Blocks.lever) {
-			return PermCheck.canUseLevers(chunkX, chunkZ);
+			return PermCheck.canUseLevers(chunkX, chunkZ, dimension);
 		}
 		
 		if (block == Blocks.beacon) {
-			return PermCheck.canUseBeacons(chunkX, chunkZ);
+			return PermCheck.canUseBeacons(chunkX, chunkZ, dimension);
 		}
 	
 		return false;

@@ -8,12 +8,12 @@ import com.wvaviator.LandDefender.Data.Database;
 
 public class PermModify {
 	
-	public static void permUpdate(String perm, boolean value, int chunkX, int chunkZ) throws SQLException {
+	public static void permUpdate(String perm, boolean value, int chunkX, int chunkZ, int dimension) throws SQLException {
 		
 		Connection c = Database.getConnection();
 		Statement stmt = null;
 		
-		String update = "UPDATE permissions SET " + perm + " = '" + value + "' WHERE chunkx = " + chunkX + " AND chunkz = " + chunkZ;
+		String update = "UPDATE permissions SET " + perm + " = '" + value + "' WHERE chunkx = " + chunkX + " AND chunkz = " + chunkZ + " AND dimension = " + dimension;
 		
 		try {
 			stmt = c.createStatement();
@@ -25,12 +25,12 @@ public class PermModify {
 		
 	}
 	
-	public static void removePerms(int chunkX, int chunkZ) throws SQLException {
+	public static void removePerms(int chunkX, int chunkZ, int dimension) throws SQLException {
 
 		Connection c = Database.getConnection();
 		Statement stmt = null;
 		
-		String update = "DELETE FROM permissions WHERE chunkx = " + chunkX + " AND chunkz = " + chunkZ;
+		String update = "DELETE FROM permissions WHERE chunkx = " + chunkX + " AND chunkz = " + chunkZ + " AND dimension = " + dimension;
 		
 		try {
 			stmt = c.createStatement();

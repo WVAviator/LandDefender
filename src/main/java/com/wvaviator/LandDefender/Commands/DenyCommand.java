@@ -9,6 +9,7 @@ import com.wvaviator.LandDefender.LandDefender;
 import com.wvaviator.LandDefender.ChunkPermissions.PermManager;
 import com.wvaviator.LandDefender.Data.ChunkData;
 import com.wvaviator.LandDefender.Reference.Chat;
+import com.wvaviator.LandDefender.WorldManager.WorldsManager;
 
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommand;
@@ -70,15 +71,16 @@ public class DenyCommand implements ICommand {
 		Chunk chunk = player.getEntityWorld().getChunkFromBlockCoords(player.getPosition());
 		int chunkX = chunk.xPosition;
 		int chunkZ = chunk.zPosition;
+		int dimension = WorldsManager.getDimension(player);
 		
 		
 		try {
-			if (ChunkData.isChunkOwned(chunkX, chunkZ) == false) {
+			if (ChunkData.isChunkOwned(chunkX, chunkZ, dimension) == false) {
 				Chat.toChat(player, Chat.doNotOwn);
 				return;
 			}
 			
-			if (ChunkData.doesPlayerOwnChunk(player, chunkX, chunkZ) == false && (!(sender.canUseCommand(LDConfiguration.useProtectPerm, "protect")))) {
+			if (ChunkData.doesPlayerOwnChunk(player, chunkX, chunkZ, dimension) == false && (!(sender.canUseCommand(LDConfiguration.useProtectPerm, "protect")))) {
 				Chat.toChat(player, Chat.doNotOwn);
 				return;
 			}
@@ -89,7 +91,7 @@ public class DenyCommand implements ICommand {
 		
 		try {
 			
-			PermManager.setPerm(player, allowed, false, chunkX, chunkZ);
+			PermManager.setPerm(player, allowed, false, chunkX, chunkZ, dimension);
 			
 		} catch (SQLException e) {
 			e.printStackTrace();

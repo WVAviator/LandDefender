@@ -20,7 +20,7 @@ public class Chat {
 	public static String claimedLand = EnumChatFormatting.AQUA + "You have succesfully claimed this land!";
 	public static String followingChunks = EnumChatFormatting.AQUA + "The following chunks are owned by " + EnumChatFormatting.GOLD;
 	public static String followingSharedChunks = EnumChatFormatting.AQUA + "The following chunks are shared with " + EnumChatFormatting.GOLD;
-	public static String tooManyChunks = EnumChatFormatting.AQUA + "You have reached your maximum claim amount!\n" + EnumChatFormatting.AQUA + "You are limited to a maximum of " + EnumChatFormatting.GOLD + LDConfiguration.allowedChunks + EnumChatFormatting.AQUA + " chunks.";
+	public static String tooManyChunks = EnumChatFormatting.AQUA + "You have reached your maximum claim amount!\n" + EnumChatFormatting.AQUA + "You are limited to a maximum of " + EnumChatFormatting.GOLD;
 	public static String ownerDisplay = EnumChatFormatting.AQUA + LDConfiguration.chunkInfoPrefix + " " + EnumChatFormatting.GOLD;
 	public static String unowned = EnumChatFormatting.AQUA + LDConfiguration.chunkInfoPrefix + " Unowned";
 	public static String sharedWith = EnumChatFormatting.AQUA + "Shared with: ";
@@ -34,6 +34,8 @@ public class Chat {
 	public static String unprotect = EnumChatFormatting.AQUA + "Removed all protections from chunk " + EnumChatFormatting.GOLD;
 	public static String updatedFor = EnumChatFormatting.AQUA + "Updated permissions for " + EnumChatFormatting.GOLD;
 	public static String noTP = EnumChatFormatting.AQUA + "You must own a chunk to teleport to it!";
+	public static String noNegative = EnumChatFormatting.AQUA + "You must not use negative numbers!";
+	public static String notEnoughClaims = EnumChatFormatting.AQUA + "That player doesn't have enough claims! Setting to 0 instead.";
 	
 	
 	public static void toChat(EntityPlayerMP player, String message) {

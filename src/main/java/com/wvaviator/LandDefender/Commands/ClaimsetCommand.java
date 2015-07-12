@@ -4,43 +4,43 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.wvaviator.LandDefender.LDConfiguration;
-import com.wvaviator.LandDefender.Data.ChunkData;
+import com.wvaviator.LandDefender.Data.PlayerData;
 import com.wvaviator.LandDefender.Reference.Chat;
-import com.wvaviator.LandDefender.Teleportation.Teleport;
-import com.wvaviator.LandDefender.WorldManager.WorldsManager;
+import com.wvaviator.LandDefender.Reference.UUIDManager;
 
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumChatFormatting;
 
-public class TPChunkCommand implements ICommand {
-	
+public class ClaimsetCommand implements ICommand {
+
 	private List aliases;
-	public TPChunkCommand() {
+	public ClaimsetCommand() {
 		this.aliases = new ArrayList();
-		this.aliases.add("tpchunk");
-		this.aliases.add("chunktp");
-		this.aliases.add("ctp");
-		this.aliases.add("tpc");
+		this.aliases.add("claimset");
+		this.aliases.add("setclaim");
+		this.aliases.add("setclaims");
+		
 	}
-
+	
 	@Override
 	public int compareTo(Object o) {
+		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
 	public String getName() {
-		return "tpchunk";
+		// TODO Auto-generated method stub
+		return "claimset";
 	}
 
 	@Override
 	public String getCommandUsage(ICommandSender sender) {
 		// TODO Auto-generated method stub
-		return "/tpchunk <x> <z>";
+		return "/claimset <player> <claims>";
 	}
 
 	@Override
@@ -53,48 +53,55 @@ public class TPChunkCommand implements ICommand {
 	public void execute(ICommandSender sender, String[] args)
 			throws CommandException {
 		
-		if (!(sender instanceof EntityPlayerMP)) {
-			Chat.toChat(sender, Chat.noConsole);
-			return;
-		}
-		EntityPlayerMP player = (EntityPlayerMP) sender;
-		
-		if (args.length != 2) {
-			getCommandUsage(sender);
+		if (args.length > 2 || args.length < 2) {
+			Chat.toChat(sender, Chat.invalidArgs);
 			return;
 		}
 		
-		int chunkX;
-		int chunkZ;
-		int dimension = WorldsManager.getDimension(player);
+		int claims;
 		
 		try {
-			chunkX = Integer.parseInt(args[0]);
-			chunkZ = Integer.parseInt(args[1]);
+			claims = Integer.parseInt(args[1]);
 		} catch (NumberFormatException e) {
-			Chat.toChat(player, Chat.invalidArgs);
+			Chat.toChat(sender, Chat.invalidArgs);
 			return;
 		}
 		
+		if (claims < 0) {
+			Chat.toChat(sender, Chat.noNegative);
+			return;
+		}
+		
+		String username = args[0];
+		
 		try {
-			if (!(player.canUseCommand(LDConfiguration.useProtectPerm, "protect")) &&
-					!(ChunkData.doesPlayerOwnChunk(player, chunkX, chunkZ, dimension))) {
-				Chat.toChat(player, Chat.noTP);
-				return;	
+			if (UUIDManager.getStringUUIDFromName(username) == null) {
+				Chat.toChat(sender, Chat.playerNotFound);
+				return;
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-			return;
 		}
+		try {
+		String uuid = UUIDManager.getStringUUIDFromName(username);
+		username = UUIDManager.getUsernameFromStringUUID(uuid);
 		
-		Teleport.teleportToChunk(player, chunkX, chunkZ);
+		PlayerData.updateAllowedChunks(uuid, claims);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		Chat.toChat(sender, EnumChatFormatting.AQUA + "Updated allowed claims to " + claims + " for " + username + ".");
+		
+		
 
 	}
 
 	@Override
 	public boolean canCommandSenderUse(ICommandSender sender) {
-		// TODO Auto-generated method stub
-		return true;
+		if (sender.canUseCommand(4, "claimset")) {
+			return true;
+		}
+		return false;
 	}
 
 	@Override

@@ -4,6 +4,7 @@ import java.io.File;
 import java.sql.SQLException;
 
 import net.minecraft.command.ICommand;
+import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
@@ -20,6 +21,9 @@ import com.google.common.eventbus.Subscribe;
 import com.wvaviator.LandDefender.Commands.AllowCommand;
 import com.wvaviator.LandDefender.Commands.ChunkInfoCommand;
 import com.wvaviator.LandDefender.Commands.ClaimCommand;
+import com.wvaviator.LandDefender.Commands.ClaimaddCommand;
+import com.wvaviator.LandDefender.Commands.ClaimsetCommand;
+import com.wvaviator.LandDefender.Commands.ClaimsubtractCommand;
 import com.wvaviator.LandDefender.Commands.DenyCommand;
 import com.wvaviator.LandDefender.Commands.ListChunksCommand;
 import com.wvaviator.LandDefender.Commands.ProtectCommand;
@@ -35,6 +39,7 @@ import com.wvaviator.LandDefender.Events.ChunkEntryHandler;
 import com.wvaviator.LandDefender.Events.FillBucketHandler;
 import com.wvaviator.LandDefender.Events.PlayerJoinHandler;
 import com.wvaviator.LandDefender.Reference.Reference;
+import com.wvaviator.LandDefender.WorldManager.WorldsManager;
 
 @Mod(modid = Reference.MOD_ID, name = Reference.MOD_NAME, version = Reference.VERSION, acceptableRemoteVersions="*")
 public class LandDefender {
@@ -43,6 +48,8 @@ public class LandDefender {
 	public static String dataDirectory = null;
 	public static boolean databaseExists = false;
 	public Configuration config;
+	public static boolean addedWorldColumn = false;
+	public static int primaryWorld;
 	
 	
 	
@@ -91,6 +98,8 @@ public class LandDefender {
 			e1.printStackTrace();
 		}
 		
+		
+		
 		MinecraftForge.EVENT_BUS.register(new ChunkEntryHandler());
 		MinecraftForge.EVENT_BUS.register(new BlockBreakHandler());
 		MinecraftForge.EVENT_BUS.register(new BlockBuildHandler());
@@ -112,6 +121,21 @@ public class LandDefender {
 		e.registerServerCommand(new AllowCommand());
 		e.registerServerCommand(new DenyCommand());
 		e.registerServerCommand(new TPChunkCommand());
+		e.registerServerCommand(new ClaimsetCommand());
+		e.registerServerCommand(new ClaimaddCommand());
+		e.registerServerCommand(new ClaimsubtractCommand());
+		
+		primaryWorld = 0;
+		
+		if (addedWorldColumn) {
+			
+			try {
+				Database.addDimensionColumn();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+			
+		}
 		
 	}
 	

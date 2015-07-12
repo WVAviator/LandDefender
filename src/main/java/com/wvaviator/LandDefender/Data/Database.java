@@ -195,7 +195,44 @@ public class Database {
 		
 	}
 	
+	public static void addDimensionColumn() throws SQLException {
+		
+		String update = "ALTER TABLE chunkdata ADD dimension INT DEFAULT '" + LandDefender.primaryWorld + "'";
+		String update2 = "ALTER TABLE permissions ADD dimension INT DEFAULT '" + LandDefender.primaryWorld + "'";
+		
+		Connection c = getConnection();
+		Statement stmt = c.createStatement();
+		
+		LandDefender.addedWorldColumn = true;
+		
+		try {
+			stmt.executeUpdate(update);
+			stmt.executeUpdate(update2);
+		} finally {
+			stmt.close();
+			c.close();
+		}
+		
+	}
+	
+	public static boolean dimensionColumnExists() throws SQLException {
+		Connection c = getConnection();
+		
+		try {
+			DatabaseMetaData dbm = c.getMetaData();
+			ResultSet rs = dbm.getColumns(null, null, "chunkdata", "dimension");
+			if(!rs.next()) {
+				return false;
+			}
+			return true;
+		} finally {
+			c.close();
+		}
+	}
+	
 	public static void databaseUpdate() throws SQLException {
+		
+		if (!dimensionColumnExists()) LandDefender.addedWorldColumn = true;
 		
 		Connection c = Database.getConnection();
 		
@@ -215,4 +252,5 @@ public class Database {
 			c.close();
 		}
 	}
+
 }

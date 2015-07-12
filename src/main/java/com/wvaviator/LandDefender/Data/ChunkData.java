@@ -15,9 +15,9 @@ import net.minecraft.entity.player.EntityPlayerMP;
 
 public class ChunkData {
 	
-	public static boolean isChunkOwned(int chunkX, int chunkZ) throws SQLException {
+	public static boolean isChunkOwned(int chunkX, int chunkZ, int dimension) throws SQLException {
 		
-		String query = "SELECT uuid FROM chunkdata WHERE chunkx = " + chunkX + " AND chunkz = " + chunkZ;
+		String query = "SELECT uuid FROM chunkdata WHERE chunkx = " + chunkX + " AND chunkz = " + chunkZ + " AND dimension = " + dimension;
 		
 		Connection c = Database.getConnection();
 		Statement stmt = null;
@@ -41,9 +41,9 @@ public class ChunkData {
 
 	}
 	
-	public static boolean doesPlayerOwnChunk(EntityPlayerMP player, int chunkX, int chunkZ) throws SQLException {
+	public static boolean doesPlayerOwnChunk(EntityPlayerMP player, int chunkX, int chunkZ, int dimension) throws SQLException {
 		
-		String query = "SELECT uuid FROM chunkdata WHERE chunkx = " + chunkX + " AND chunkz = " + chunkZ + " AND isowner = 'TRUE'";
+		String query = "SELECT uuid FROM chunkdata WHERE chunkx = " + chunkX + " AND chunkz = " + chunkZ + " AND isowner = 'TRUE' AND dimension = " + dimension;
 		Connection c = Database.getConnection();
 		Statement stmt = null;
 		
@@ -77,9 +77,9 @@ public class ChunkData {
 		
 		
 	
-	public static boolean doesPlayerShareChunk(EntityPlayerMP player, int chunkX, int chunkZ) throws SQLException {
+	public static boolean doesPlayerShareChunk(EntityPlayerMP player, int chunkX, int chunkZ, int dimension) throws SQLException {
 		
-		String query = "SELECT uuid FROM chunkdata WHERE chunkx = " + chunkX + " AND chunkz = " + chunkZ + " AND isowner = 'FALSE'";
+		String query = "SELECT uuid FROM chunkdata WHERE chunkx = " + chunkX + " AND chunkz = " + chunkZ + " AND isowner = 'FALSE' AND dimension = " + dimension;
 		
 		Connection c = Database.getConnection();
 		Statement stmt = null;
@@ -94,25 +94,27 @@ public class ChunkData {
 			return false;
 		}
 		
+		do {
+		
 		String uuid = rs.getString("uuid");
 		UUID playerUUID = player.getUniqueID();
 		
-		
-		
 		if (uuid.equals(playerUUID.toString())) {
-
 			return true;
 		}
+		
+		} while (rs.next());
 
 		return false;
+		
 		} finally {
 			stmt.close();
 			c.close();
 		}
 	}
 	
-	public static String whichPlayerOwnsChunk(int chunkX, int chunkZ) throws SQLException {
-		String query = "SELECT uuid FROM chunkdata WHERE chunkx = " + chunkX + " AND chunkz = " + chunkZ + " AND isowner = 'TRUE'";
+	public static String whichPlayerOwnsChunk(int chunkX, int chunkZ, int dimension) throws SQLException {
+		String query = "SELECT uuid FROM chunkdata WHERE chunkx = " + chunkX + " AND chunkz = " + chunkZ + " AND isowner = 'TRUE' AND dimension = " + dimension;
 		Connection c = Database.getConnection();
 		Statement stmt = null;
 		
@@ -133,8 +135,8 @@ public class ChunkData {
 
 	}
 	
-	public static String whichPlayerOwnsChunkByName(int chunkX, int chunkZ) throws SQLException {
-		String query = "SELECT name FROM chunkdata WHERE chunkx = " + chunkX + " AND chunkz = " + chunkZ + " AND isowner = 'TRUE'";
+	public static String whichPlayerOwnsChunkByName(int chunkX, int chunkZ, int dimension) throws SQLException {
+		String query = "SELECT name FROM chunkdata WHERE chunkx = " + chunkX + " AND chunkz = " + chunkZ + " AND isowner = 'TRUE' AND dimension = " + dimension;
 		Connection c = Database.getConnection();
 		Statement stmt = null;
 		
@@ -155,12 +157,12 @@ public class ChunkData {
 
 	}
 	
-	public static void addChunk(EntityPlayerMP player, int chunkX, int chunkZ) throws SQLException {
+	public static void addChunk(EntityPlayerMP player, int chunkX, int chunkZ, int dimension) throws SQLException {
 		
 		String uuid = player.getUniqueID().toString();
 		//int nextId = Database.getSize() + 1;
 		
-		String update = "INSERT INTO chunkdata (uuid, chunkx, chunkz, isowner, name) VALUES ('" + uuid + "', " + chunkX + ", " + chunkZ + ", 'TRUE', '" + player.getName() + "')";
+		String update = "INSERT INTO chunkdata (uuid, chunkx, chunkz, isowner, name, dimension) VALUES ('" + uuid + "', " + chunkX + ", " + chunkZ + ", 'TRUE', '" + player.getName() + "', " + dimension + ")";
 		Connection c = Database.getConnection();
 		Statement stmt = null;
 		
@@ -176,11 +178,11 @@ public class ChunkData {
 		
 	}
 	
-	public static void removeChunk(EntityPlayerMP player, int chunkX, int chunkZ) throws SQLException {
+	public static void removeChunk(EntityPlayerMP player, int chunkX, int chunkZ, int dimension) throws SQLException {
 		
 		String uuid = player.getUniqueID().toString();
 		
-		String update = "DELETE FROM chunkdata WHERE uuid = '" + uuid + "' AND chunkx = " + chunkX + " AND chunkz = " + chunkZ + " AND isowner = 'TRUE'";
+		String update = "DELETE FROM chunkdata WHERE uuid = '" + uuid + "' AND chunkx = " + chunkX + " AND chunkz = " + chunkZ + " AND isowner = 'TRUE' AND dimension = " + dimension;
 		Connection c = Database.getConnection();
 		Statement stmt = null;
 		
@@ -198,7 +200,7 @@ public class ChunkData {
 		
 	}
 	
-	public static void addShared(EntityPlayerMP player, String trustee, int chunkX, int chunkZ) throws SQLException {
+	public static void addShared(EntityPlayerMP player, String trustee, int chunkX, int chunkZ, int dimension) throws SQLException {
 		
 		String uuid = UUIDManager.getStringUUIDFromName(trustee);
 		
@@ -209,7 +211,7 @@ public class ChunkData {
 		
 		//int nextId = Database.getSize() + 1;
 		
-		String update = "INSERT INTO chunkdata (uuid, chunkx, chunkz, isowner, name) VALUES ('" + uuid + "', " + chunkX + ", " + chunkZ + ", 'FALSE', '" + trustee + "')";
+		String update = "INSERT INTO chunkdata (uuid, chunkx, chunkz, isowner, name, dimension) VALUES ('" + uuid + "', " + chunkX + ", " + chunkZ + ", 'FALSE', '" + trustee + "', " + dimension + ")";
 		Connection c = Database.getConnection();
 		Statement stmt = null;
 		
@@ -228,7 +230,7 @@ public class ChunkData {
 		
 	}
 	
-	public static void removeShared(EntityPlayerMP player, String trustee, int chunkX, int chunkZ) throws SQLException {
+	public static void removeShared(EntityPlayerMP player, String trustee, int chunkX, int chunkZ, int dimension) throws SQLException {
 		
 		String uuid = UUIDManager.getStringUUIDFromName(trustee);
 		
@@ -238,7 +240,7 @@ public class ChunkData {
 		}
 		
 		
-		String update = "DELETE FROM chunkdata WHERE uuid = '" + uuid + "' AND chunkx = " + chunkX + " AND chunkz = " + chunkZ + " AND isowner = 'FALSE'";
+		String update = "DELETE FROM chunkdata WHERE uuid = '" + uuid + "' AND chunkx = " + chunkX + " AND chunkz = " + chunkZ + " AND isowner = 'FALSE' AND dimension = " + dimension;
 		Connection c = Database.getConnection();
 		Statement stmt = null;
 		
@@ -256,9 +258,9 @@ public class ChunkData {
 		}
 	}
 	
-	public static void removeAllShared(int chunkX, int chunkZ) throws SQLException {
+	public static void removeAllShared(int chunkX, int chunkZ, int dimension) throws SQLException {
 		
-		String update = "DELETE FROM chunkdata WHERE chunkx = " + chunkX + " AND chunkz = " + chunkZ + " AND isowner = 'FALSE'";
+		String update = "DELETE FROM chunkdata WHERE chunkx = " + chunkX + " AND chunkz = " + chunkZ + " AND isowner = 'FALSE' AND dimension = " + dimension;
 		
 		Connection c = Database.getConnection();
 		Statement stmt = null;
@@ -277,13 +279,12 @@ public class ChunkData {
 		
 	}
 
-	public static void protectChunk(EntityPlayerMP player, String name,
-			int chunkX, int chunkZ) throws SQLException {
+	public static void protectChunk(EntityPlayerMP player, String name, int chunkX, int chunkZ, int dimension) throws SQLException {
 		
 		String uuid = "PROTECTION";
 		
 		
-		String update = "INSERT INTO chunkdata (uuid, chunkx, chunkz, isowner, name) VALUES ('" + uuid + "', " + chunkX + ", " + chunkZ + ", 'TRUE', '" + name + "')";
+		String update = "INSERT INTO chunkdata (uuid, chunkx, chunkz, isowner, name, dimension) VALUES ('" + uuid + "', " + chunkX + ", " + chunkZ + ", 'TRUE', '" + name + "', " + dimension + ")";
 		Connection c = Database.getConnection();
 		Statement stmt = null;
 		
@@ -299,13 +300,13 @@ public class ChunkData {
 		
 	}
 	
-	public static void unprotectChunk(int chunkX, int chunkZ) throws SQLException {
+	public static void unprotectChunk(int chunkX, int chunkZ, int dimension) throws SQLException {
 		
 		String update = null;
 		if (LDConfiguration.canOverride == true) {
-			update = "DELETE FROM chunkdata WHERE chunkx = " + chunkX + " AND chunkz = " + chunkZ;
+			update = "DELETE FROM chunkdata WHERE chunkx = " + chunkX + " AND chunkz = " + chunkZ + " AND dimension = " + dimension;
 		} else {
-			update = "DELETE FROM chunkdata WHERE uuid = 'PROTECTION' AND chunkx = " + chunkX + " AND chunkz = " + chunkZ;
+			update = "DELETE FROM chunkdata WHERE uuid = 'PROTECTION' AND chunkx = " + chunkX + " AND chunkz = " + chunkZ + " AND dimension = " + dimension;
 		}
 		
 		Connection c = Database.getConnection();
