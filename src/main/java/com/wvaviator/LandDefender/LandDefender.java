@@ -36,6 +36,8 @@ import com.wvaviator.LandDefender.Data.Database;
 import com.wvaviator.LandDefender.Events.BlockBreakHandler;
 import com.wvaviator.LandDefender.Events.BlockBuildHandler;
 import com.wvaviator.LandDefender.Events.ChunkEntryHandler;
+import com.wvaviator.LandDefender.Events.EntityHandler;
+import com.wvaviator.LandDefender.Events.ExplosionHandler;
 import com.wvaviator.LandDefender.Events.FillBucketHandler;
 import com.wvaviator.LandDefender.Events.PlayerJoinHandler;
 import com.wvaviator.LandDefender.Reference.Reference;
@@ -105,6 +107,8 @@ public class LandDefender {
 		MinecraftForge.EVENT_BUS.register(new BlockBuildHandler());
 		MinecraftForge.EVENT_BUS.register(new PlayerJoinHandler());
 		MinecraftForge.EVENT_BUS.register(new FillBucketHandler());
+		MinecraftForge.EVENT_BUS.register(new ExplosionHandler());
+		//MinecraftForge.EVENT_BUS.register(new EntityHandler());
 	}
 	
 	@EventHandler
@@ -128,6 +132,8 @@ public class LandDefender {
 		primaryWorld = 0;
 		
 		if (addedWorldColumn) {
+			
+			System.out.println("Dimension ID not found in database! Adding columns in Chunks Table and Permissions Table");
 			
 			try {
 				Database.addDimensionColumn();
